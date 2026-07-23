@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบนัดหมายคลินิกฉีดวัคซีน WCC อัจฉริยะ - โรงพยาบาลวังน้ำเย็น</title>
+  <title>ระบบนัดหมายคลินิกฉีดวัคซีน WCC อัจฉริยะ - โรงพยาบาลคลองหาด</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
   <style>
@@ -45,7 +45,7 @@
       </div>
       <div>
        <h1 class="text-xl md:text-2xl font-black tracking-tight text-white drop-shadow-sm">ระบบนัดหมายวัคซีน WCC</h1>
-       <p class="text-teal-100 text-sm font-medium">โรงพยาบาลวังน้ำเย็น</p>
+       <p class="text-teal-100 text-sm font-medium">โรงพยาบาลคลองหาด</p>
       </div>
      </div>
      <div class="text-right hidden md:block">
@@ -275,7 +275,7 @@
         }
 
         async function fetchSpecialHolidays() {
-            const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSh9GQi2VKFlufPsIOFGblKZVB8hAzHg-JW68Z1tyco9R_IXOnlqQ44uZDV9nxAuf-dihXFJTukJnUp/pub?gid=1175473865&single=true&output=csv'; 
+            const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTeNaf6KixwzfXU2ZMvwhe1fPvWbfTkmzZGwQnuMKKNdMZzmsWYrsdYQqL1MxYhXPiuZeDlhQ12Bp2j/pub?output=csv'; 
             const response = await fetch(csvUrl + '&t=' + new Date().getTime());
             const data = await response.text();
             
