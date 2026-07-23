@@ -13,7 +13,7 @@
         * { box-sizing: border-box; }
         body { 
             font-family: 'Sarabun', sans-serif; 
-            background-color: #f0fdfa; 
+            background-color: #fdf2f8; 
             margin: 0; 
             padding: 0; 
             color: #1e293b;
@@ -28,9 +28,9 @@
         }
 
         .vaccine-card { transition: transform 0.15s ease; }
-        .vaccine-card:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .vaccine-card:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(244, 114, 182, 0.15); }
         .calendar-day { transition: all 0.2s ease; }
-        .calendar-day:hover { background-color: #e0f2fe; }
+        .calendar-day:hover { background-color: #fce7f3; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -44,7 +44,7 @@
         /* Fallback Basic Layout Styles */
         input, select, button { font-family: inherit; }
         .btn-primary {
-            background: linear-gradient(to right, #2563eb, #4f46e5);
+            background: linear-gradient(to right, #ec4899, #f43f5e);
             color: white;
             font-weight: 900;
             padding: 1rem;
@@ -57,18 +57,18 @@
     </style>
 </head>
 <body class="min-h-screen">
-  <div class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white p-4 md:p-6 shadow-lg" style="background: linear-gradient(to right, #0d9488, #0891b2); color: white; padding: 1.5rem;">
+  <div class="bg-gradient-to-r from-pink-400 to-rose-400 text-white p-4 md:p-6 shadow-lg" style="background: linear-gradient(to right, #f472b6, #fb7185); color: white; padding: 1.5rem;">
    <div class="max-w-5xl mx-auto" style="max-width: 64rem; margin: 0 auto;">
     <div class="text-center mb-3" style="text-align: center; margin-bottom: 0.75rem;">
-     <div class="inline-flex items-center bg-white bg-opacity-20 rounded-full px-4 py-1.5 shadow-sm" style="display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); border-radius: 9999px; padding: 0.375rem 1rem;">
-      <span class="text-white text-xs font-bold tracking-wide">✨ เวอร์ชัน 41 (Smart HosXP BirthDate Parser + Standalone Style)</span> 
-      <span class="text-teal-100 text-xs ml-2 border-l border-teal-300 pl-2" id="syncStatus" style="margin-left: 0.5rem; padding-left: 0.5rem; border-left: 1px solid rgba(255,255,255,0.4);">กำลังเชื่อมต่อฐานข้อมูล...</span>
+     <div class="inline-flex items-center bg-white bg-opacity-25 rounded-full px-4 py-1.5 shadow-sm" style="display: inline-flex; align-items: center; background: rgba(255,255,255,0.25); border-radius: 9999px; padding: 0.375rem 1rem;">
+      <span class="text-white text-xs font-bold tracking-wide">✨ เวอร์ชัน 41 (Khlong Hat Hospital Pastel Pink Edition)</span> 
+      <span class="text-pink-100 text-xs ml-2 border-l border-pink-200 pl-2" id="syncStatus" style="margin-left: 0.5rem; padding-left: 0.5rem; border-left: 1px solid rgba(255,255,255,0.4);">กำลังเชื่อมต่อฐานข้อมูล...</span>
      </div>
     </div>
-    <div class="flex items-center justify-between" style="display: flex; align-items: center; justify-content: space-between;">
+    <div class="flex items-center justify-between" style="display: flex; align-items: center; justify-between: space-between;">
      <div class="flex items-center space-x-4" style="display: flex; align-items: center; gap: 1rem;">
       <div class="bg-white p-2 md:p-3 rounded-full shadow-md" style="background: white; padding: 0.5rem; border-radius: 9999px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-       <svg style="width: 32px; height: 32px; color: #0d9488;" fill="currentColor" viewBox="0 0 24 24">
+       <svg style="width: 32px; height: 32px; color: #ec4899;" fill="currentColor" viewBox="0 0 24 24">
         <circle cx="12" cy="10" r="8" fill="#FFE4B5" stroke="currentColor" stroke-width="1" /> 
         <circle cx="9" cy="8" r="1" fill="currentColor" /> <circle cx="15" cy="8" r="1" fill="currentColor" /> 
         <path d="M8 12 Q12 16 16 12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" /> 
@@ -78,26 +78,26 @@
       </div>
       <div>
        <h1 class="text-xl md:text-2xl font-black tracking-tight text-white drop-shadow-sm" style="font-size: 1.5rem; font-weight: 900; margin: 0;">ระบบนัดหมายวัคซีน WCC</h1>
-       <p class="text-teal-100 text-sm font-medium" style="margin: 0; opacity: 0.9; font-size: 0.875rem;">โรงพยาบาลคลองหาด</p>
+       <p class="text-pink-100 text-sm font-medium" style="margin: 0; opacity: 0.95; font-size: 0.875rem;">โรงพยาบาลคลองหาด</p>
       </div>
      </div>
      <div class="text-right hidden md:block">
       <div id="currentDateTime" class="text-lg font-bold drop-shadow-sm" style="font-size: 1.125rem; font-weight: 700;"></div>
       <div class="flex space-x-2 mt-2 justify-end" style="margin-top: 0.5rem;">
-       <button onclick="resetAll()" class="bg-white text-teal-700 px-6 py-2 rounded-lg hover:bg-teal-50 font-bold text-sm shadow transition" style="background: white; color: #0f766e; padding: 0.5rem 1.25rem; border-radius: 0.5rem; border: none; font-weight: 700; cursor: pointer;"> 🔄 รีเซ็ตข้อมูล (เริ่มใหม่) </button>
+       <button onclick="resetAll()" class="bg-white text-pink-700 px-6 py-2 rounded-lg hover:bg-pink-50 font-bold text-sm shadow transition" style="background: white; color: #be185d; padding: 0.5rem 1.25rem; border-radius: 0.5rem; border: none; font-weight: 700; cursor: pointer;"> 🔄 รีเซ็ตข้อมูล (เริ่มใหม่) </button>
       </div>
      </div>
     </div>
     <div class="flex space-x-2 mt-4 justify-center md:hidden" style="margin-top: 1rem;">
-        <button onclick="resetAll()" class="bg-white text-teal-700 px-4 py-2 rounded-lg font-bold text-sm shadow flex-1" style="background: white; color: #0f766e; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; font-weight: 700; cursor: pointer; width: 100%;"> 🔄 รีเซ็ตข้อมูล (เริ่มใหม่) </button>
+        <button onclick="resetAll()" class="bg-white text-pink-700 px-4 py-2 rounded-lg font-bold text-sm shadow flex-1" style="background: white; color: #be185d; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; font-weight: 700; cursor: pointer; width: 100%;"> 🔄 รีเซ็ตข้อมูล (เริ่มใหม่) </button>
     </div>
    </div>
   </div>
 
   <div class="max-w-5xl mx-auto p-4 md:p-6" style="max-width: 64rem; margin: 0 auto; padding: 1.5rem;">
-   <div class="bg-white rounded-xl shadow-md mb-6 overflow-x-auto no-scrollbar border border-gray-100" style="background: white; border-radius: 0.75rem; margin-bottom: 1.5rem; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-    <div class="flex border-b min-w-max" style="display: flex; border-bottom: 1px solid #e2e8f0;">
-     <button onclick="showTab('normal')" id="normalTab" class="flex-1 py-4 px-6 text-center font-black text-blue-600 border-b-4 border-blue-600 bg-blue-50/50 whitespace-nowrap transition-colors" style="flex: 1; padding: 1rem 1.5rem; border: none; border-bottom: 4px solid #2563eb; background: #eff6ff; color: #2563eb; font-weight: 900; cursor: pointer;">
+   <div class="bg-white rounded-xl shadow-md mb-6 overflow-x-auto no-scrollbar border border-pink-100" style="background: white; border-radius: 0.75rem; margin-bottom: 1.5rem; border: 1px solid #fbcfe8; box-shadow: 0 4px 6px -1px rgba(244, 114, 182, 0.08);">
+    <div class="flex border-b min-w-max" style="display: flex; border-bottom: 1px solid #fbcfe8;">
+     <button onclick="showTab('normal')" id="normalTab" class="flex-1 py-4 px-6 text-center font-black text-pink-600 border-b-4 border-pink-500 bg-pink-50/70 whitespace-nowrap transition-colors" style="flex: 1; padding: 1rem 1.5rem; border: none; border-bottom: 4px solid #ec4899; background: #fce7f3; color: #db2777; font-weight: 900; cursor: pointer;">
       <div class="flex items-center justify-center space-x-2" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
        <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 20 20"><path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" /></svg><span>นัดหมายตามอายุ</span>
       </div>
@@ -112,7 +112,7 @@
        <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" /></svg><span>แผนการฉีดวัคซีน</span>
       </div>
      </button>
-     <button onclick="showTab('holiday')" id="holidayTab" class="flex-1 py-4 px-6 text-center font-bold text-gray-500 hover:text-red-600 border-b-4 border-transparent hover:bg-gray-50 whitespace-nowrap transition-colors" style="flex: 1; padding: 1rem 1.5rem; border: none; border-bottom: 4px solid transparent; background: transparent; color: #64748b; font-weight: 700; cursor: pointer;">
+     <button onclick="showTab('holiday')" id="holidayTab" class="flex-1 py-4 px-6 text-center font-bold text-gray-500 hover:text-rose-600 border-b-4 border-transparent hover:bg-gray-50 whitespace-nowrap transition-colors" style="flex: 1; padding: 1rem 1.5rem; border: none; border-bottom: 4px solid transparent; background: transparent; color: #64748b; font-weight: 700; cursor: pointer;">
       <div class="flex items-center justify-center space-x-2" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
        <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM4 8h12v8H4V8z" clip-rule="evenodd" /></svg><span>ปฏิทินวันหยุด</span>
       </div>
@@ -121,29 +121,29 @@
    </div>
 
    <div id="normalContent" class="max-w-2xl mx-auto" style="max-width: 42rem; margin: 0 auto;">
-    <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100" style="background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); border: 1px solid #f1f5f9;">
-     <h2 class="text-xl font-black text-gray-800 mb-6 flex items-center border-b pb-4" style="font-size: 1.25rem; font-weight: 900; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; display: flex; align-items: center;">
-      <span class="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3" style="background: #dbeafe; color: #2563eb; padding: 0.5rem; border-radius: 0.5rem; margin-right: 0.75rem; display: inline-flex;"><svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></span>
+    <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-pink-100" style="background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(244, 114, 182, 0.12); border: 1px solid #fbcfe8;">
+     <h2 class="text-xl font-black text-gray-800 mb-6 flex items-center border-b pb-4" style="font-size: 1.25rem; font-weight: 900; margin-bottom: 1.5rem; border-bottom: 1px solid #fce7f3; padding-bottom: 1rem; display: flex; align-items: center;">
+      <span class="bg-pink-100 text-pink-600 p-2 rounded-lg mr-3" style="background: #fce7f3; color: #db2777; padding: 0.5rem; border-radius: 0.5rem; margin-right: 0.75rem; display: inline-flex;"><svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></span>
       ข้อมูลเด็ก (นัดตามเกณฑ์)
      </h2>
      
-     <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 shadow-sm" style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem;">
-      <h3 class="text-sm font-bold text-blue-800 mb-1 flex items-center" style="font-size: 0.875rem; font-weight: 700; color: #1e40af; margin: 0 0 0.25rem 0;">💡 รองรับการก๊อปปี้วาง (Paste) จาก HosXP</h3>
-      <p class="text-xs text-blue-700" style="font-size: 0.75rem; color: #1d4ed8; margin: 0;">สามารถก๊อปปี้วันเกิดทั้งรูปแบบ พ.ศ. (เช่น <code style="background: #dbeafe; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-weight: bold;">23/07/2567</code>) หรือ ค.ศ. (เช่น <code style="background: #dbeafe; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-weight: bold;">2024-07-23</code>) มาวางลงในช่องได้เลย ระบบจะคำนวณอัตโนมัติ</p>
+     <div class="bg-pink-50 border border-pink-200 rounded-xl p-4 mb-6 shadow-sm" style="background: #fdf2f8; border: 1px solid #fbcfe8; border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem;">
+      <h3 class="text-sm font-bold text-pink-800 mb-1 flex items-center" style="font-size: 0.875rem; font-weight: 700; color: #9d174d; margin: 0 0 0.25rem 0;">💡 รองรับการก๊อปปี้วาง (Paste) จาก HosXP</h3>
+      <p class="text-xs text-pink-700" style="font-size: 0.75rem; color: #be185d; margin: 0;">สามารถก๊อปปี้วันเกิดทั้งรูปแบบ พ.ศ. (เช่น <code style="background: #fce7f3; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-weight: bold; color: #831843;">23/07/2567</code>) หรือ ค.ศ. (เช่น <code style="background: #fce7f3; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-weight: bold; color: #831843;">2024-07-23</code>) มาวางลงในช่องได้เลย ระบบจะคำนวณอัตโนมัติ</p>
      </div>
 
      <div class="space-y-5" style="display: flex; flex-direction: column; gap: 1.25rem;">
       <div>
        <label class="block text-sm font-black text-gray-700 mb-2" style="display: block; font-size: 0.875rem; font-weight: 900; color: #334155; margin-bottom: 0.5rem;">🎈 วันเกิดเด็ก (ก๊อปปี้จาก HosXP มาวางได้เลย)</label> 
-       <input type="text" id="birthDate" placeholder="วาง หรือ พิมพ์ เช่น 23/07/2567 หรือ 2024-07-23" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-bold text-lg text-gray-700 shadow-sm transition" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; font-weight: 700; font-size: 1.125rem; color: #334155;">
+       <input type="text" id="birthDate" placeholder="วาง หรือ พิมพ์ เช่น 23/07/2567 หรือ 2024-07-23" class="w-full p-3 border-2 border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 font-bold text-lg text-gray-700 shadow-sm transition" style="width: 100%; padding: 0.75rem; border: 2px solid #fbcfe8; border-radius: 0.75rem; font-weight: 700; font-size: 1.125rem; color: #334155;">
       </div>
       <div>
        <label class="block text-sm font-black text-gray-700 mb-2" style="display: block; font-size: 0.875rem; font-weight: 900; color: #334155; margin-bottom: 0.5rem;">🏥 วันที่มารับบริการ (วันนี้)</label> 
-       <input type="date" id="visitDate" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-bold text-lg text-gray-700 shadow-sm transition" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; font-weight: 700; font-size: 1.125rem; color: #334155;">
+       <input type="date" id="visitDate" class="w-full p-3 border-2 border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 font-bold text-lg text-gray-700 shadow-sm transition" style="width: 100%; padding: 0.75rem; border: 2px solid #fbcfe8; border-radius: 0.75rem; font-weight: 700; font-size: 1.125rem; color: #334155;">
       </div>
      </div>
      
-     <button onclick="calculateAge()" class="mt-8 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all font-black shadow-lg shadow-blue-500/30 text-xl transform hover:-translate-y-1" style="margin-top: 2rem; width: 100%; background: linear-gradient(to right, #2563eb, #4f46e5); color: white; padding: 1rem; border-radius: 0.75rem; font-weight: 900; font-size: 1.25rem; border: none; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);"> 
+     <button onclick="calculateAge()" class="mt-8 w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-4 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all font-black shadow-lg shadow-pink-500/30 text-xl transform hover:-translate-y-1" style="margin-top: 2rem; width: 100%; background: linear-gradient(to right, #ec4899, #f43f5e); color: white; padding: 1rem; border-radius: 0.75rem; font-weight: 900; font-size: 1.25rem; border: none; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(236,72,153,0.3);"> 
         🚀 คำนวณวันนัด 
      </button>
     </div>
@@ -188,9 +188,9 @@
    </div>
 
    <div id="holidayContent" class="space-y-6 hidden">
-    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border-t-8 border-red-500" style="background: white; border-radius: 1rem; padding: 2rem; border-top: 8px solid #ef4444;">
+    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border-t-8 border-rose-500" style="background: white; border-radius: 1rem; padding: 2rem; border-top: 8px solid #f43f5e;">
         <h2 class="text-2xl font-black text-gray-800 mb-6 flex items-center border-b pb-4" style="font-size: 1.5rem; font-weight: 900; display: flex; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
-            <svg style="width: 32px; height: 32px; color: #ef4444; margin-right: 0.5rem;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM4 8h12v8H4V8z" clip-rule="evenodd" /></svg> 
+            <svg style="width: 32px; height: 32px; color: #f43f5e; margin-right: 0.5rem;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM4 8h12v8H4V8z" clip-rule="evenodd" /></svg> 
             ฐานข้อมูลวันหยุด WCC (พ.ศ. 2567-2576)
         </h2>
         
@@ -199,12 +199,12 @@
    </div>
 
    <!-- ส่วนแสดงเครดิตผู้พัฒนา (Footer Copyright) -->
-   <footer class="mt-12 pt-6 border-t border-slate-200 text-center" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; text-align: center;">
+   <footer class="mt-12 pt-6 border-t border-pink-200 text-center" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #fbcfe8; text-align: center;">
     <p style="margin: 0; font-weight: 700; color: #334155; font-size: 0.95rem;">
-     © พัฒนาระบบโดย <span style="color: #0d9488; font-weight: 900;">ยุทธชัย อุพลรัมย์</span> — โรงพยาบาลวังน้ำเย็น
+     © พัฒนาระบบโดย <span style="color: #ec4899; font-weight: 900;">ยุทธชัย อุพลรัมย์</span> — โรงพยาบาลวังน้ำเย็น
     </p>
     <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #64748b; font-weight: 500;">
-     ระบบนัดหมายคลินิกฉีดวัคซีน WCC อัจฉริยะ (Smart WCC Appointment System)
+     ระบบนัดหมายคลินิกฉีดวัคซีน WCC อัจฉริยะ - โรงพยาบาลคลองหาด
     </p>
    </footer>
 
@@ -224,20 +224,20 @@
     
     <div class="p-3 md:p-6 overflow-y-auto flex-1 flex flex-col gap-4 bg-[#f8fafc]" style="padding: 1.5rem; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 1rem;">
         
-        <div id="modalAgeSection" class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 hidden" style="background: white; border-radius: 0.75rem; border: 1px solid #e2e8f0; padding: 0.75rem;">
+        <div id="modalAgeSection" class="bg-white rounded-xl shadow-sm border border-pink-200 p-3 hidden" style="background: white; border-radius: 0.75rem; border: 1px solid #fbcfe8; padding: 0.75rem;">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
-                <div class="bg-blue-50 border border-blue-200 p-2 rounded-lg flex flex-col justify-center items-center text-center shadow-inner" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 0.5rem; border-radius: 0.5rem; text-align: center;">
-                    <span class="text-blue-600 font-bold text-[11px] mb-1" style="color: #2563eb; font-weight: 700; font-size: 11px;">อายุ (ปี เดือน วัน)</span>
-                    <span id="modalAgeYMD" class="text-base md:text-lg font-black text-blue-900 leading-none" style="font-size: 1.125rem; font-weight: 900; color: #1e3a8a;"></span>
+                <div class="bg-pink-50 border border-pink-200 p-2 rounded-lg flex flex-col justify-center items-center text-center shadow-inner" style="background: #fdf2f8; border: 1px solid #fbcfe8; padding: 0.5rem; border-radius: 0.5rem; text-align: center;">
+                    <span class="text-pink-600 font-bold text-[11px] mb-1" style="color: #db2777; font-weight: 700; font-size: 11px;">อายุ (ปี เดือน วัน)</span>
+                    <span id="modalAgeYMD" class="text-base md:text-lg font-black text-pink-900 leading-none" style="font-size: 1.125rem; font-weight: 900; color: #831843;"></span>
                 </div>
-                <div class="bg-blue-50 border border-blue-200 p-2 rounded-lg flex flex-col justify-center items-center text-center shadow-inner" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 0.5rem; border-radius: 0.5rem; text-align: center;">
-                    <span class="text-blue-600 font-bold text-[11px] mb-1" style="color: #2563eb; font-weight: 700; font-size: 11px;">อายุ (สัปดาห์)</span>
-                    <span id="modalAgeWeeks" class="text-base md:text-lg font-black text-blue-900 leading-none" style="font-size: 1.125rem; font-weight: 900; color: #1e3a8a;"></span>
+                <div class="bg-pink-50 border border-pink-200 p-2 rounded-lg flex flex-col justify-center items-center text-center shadow-inner" style="background: #fdf2f8; border: 1px solid #fbcfe8; padding: 0.5rem; border-radius: 0.5rem; text-align: center;">
+                    <span class="text-pink-600 font-bold text-[11px] mb-1" style="color: #db2777; font-weight: 700; font-size: 11px;">อายุ (สัปดาห์)</span>
+                    <span id="modalAgeWeeks" class="text-base md:text-lg font-black text-pink-900 leading-none" style="font-size: 1.125rem; font-weight: 900; color: #831843;"></span>
                 </div>
                 <div class="col-span-2 bg-gray-50 border border-gray-200 p-2.5 rounded-lg flex flex-col justify-between shadow-inner" style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.625rem; border-radius: 0.5rem;">
                     <div class="flex justify-between items-center mb-1.5" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.375rem;">
                         <span class="text-gray-700 font-black text-xs flex items-center" style="color: #334155; font-weight: 900; font-size: 0.75rem;">📝 ข้อความแนะนำ (ก๊อปปี้ลง HosXP ได้เลย)</span>
-                        <button onclick="copyStaffText()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-xs font-bold transition shadow-sm border border-blue-700" style="background: #2563eb; color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer;">📋 คัดลอกข้อความ</button>
+                        <button onclick="copyStaffText()" class="bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 rounded-lg text-xs font-bold transition shadow-sm border border-pink-700" style="background: #db2777; color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer;">📋 คัดลอกข้อความ</button>
                     </div>
                     <div id="staffText" class="text-[10px] text-gray-500 leading-tight" style="font-size: 10px; color: #64748b; line-height: 1.3;">นั่งสังเกตอาการ 30 นาที หลังจากฉีดวัคซีน หากมีผื่นขึ้นตามร่างกาย ร้องกวนมาก ให้แจ้งเจ้าหน้าที่ เมื่อกลับบ้าน หากมีไข้ ให้เช็ดตัวลดไข้ รับประทานยาลดไข้ทุก 4-6 ชั่วโมง ถ้ามีอาการบวม แดง บริเวณที่ฉีดวัคซีนให้ประคบเย็น โดยใช้ผ้าห่อน้ำแข็ง /ไอซ์แพ็ค ประคบ ถ้ามีไข้สูงเกิน 3 วัน ให้กลับมาพบแพทย์<br>แผนการดูแลต่อเนื่อง<br>เฝ้าระวังอาการ AEFI หลังฉีดวัคซีน</div>
                 </div>
@@ -298,7 +298,7 @@
                 generateHolidayList();
                 
                 document.getElementById('syncStatus').innerHTML = "✅ พร้อมใช้งาน";
-                document.getElementById('syncStatus').style.color = "#a7f3d0";
+                document.getElementById('syncStatus').style.color = "#fbcfe8";
             } catch (error) {
                 console.error("🔥 WCC System Error:", error);
                 document.getElementById('syncStatus').innerHTML = "❌ ขัดข้อง กรุณารีเฟรช";
@@ -377,12 +377,12 @@
             let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">';
             Object.keys(vaccineSchedules).forEach(code => {
                 const vac = vaccineSchedules[code];
-                let vacListHtml = vac.vaccines.map(v => `<div style="background: #f8fafc; padding: 0.625rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 0.75rem;"><span style="font-size: 1.25rem;">${v.type === 'injection' ? '💉' : '💊'}</span><div><div style="font-weight: 700; color: #1e293b; font-size: 0.875rem;">${v.name}</div><div style="font-size: 0.75rem; color: #64748b;">${v.thai}</div></div></div>`).join('');
+                let vacListHtml = vac.vaccines.map(v => `<div style="background: #fdf2f8; padding: 0.625rem; border-radius: 0.5rem; border: 1px solid #fbcfe8; display: flex; align-items: flex-start; gap: 0.75rem;"><span style="font-size: 1.25rem;">${v.type === 'injection' ? '💉' : '💊'}</span><div><div style="font-weight: 700; color: #831843; font-size: 0.875rem;">${v.name}</div><div style="font-size: 0.75rem; color: #9d174d;">${v.thai}</div></div></div>`).join('');
                 html += `
-                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem;"><h3 style="font-size: 1.125rem; font-weight: 900; color: #15803d; margin: 0;">📌 อายุ ${vac.name}</h3></div>
+                    <div style="background: white; border: 1px solid #fbcfe8; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 1px 3px rgba(244,114,182,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #fce7f3; padding-bottom: 0.75rem;"><h3 style="font-size: 1.125rem; font-weight: 900; color: #db2777; margin: 0;">📌 อายุ ${vac.name}</h3></div>
                         <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">${vacListHtml}</div>
-                        <div style="background: #eff6ff; color: #1e40af; font-size: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-weight: 700; display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.5rem;">
+                        <div style="background: #fdf2f8; color: #be185d; font-size: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-weight: 700; display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.5rem; border: 1px solid #fbcfe8;">
                             <div>📅 รอบ: ${vac.schedule}</div>
                             ${vac.time ? `<div>⏰ เวลา: ${vac.time}</div>` : ''}
                         </div>
@@ -471,10 +471,10 @@
             ['normal', 'delayed', 'schedule', 'holiday'].forEach(t => {
                 const btn = document.getElementById(t + 'Tab'), content = document.getElementById(t + 'Content');
                 if (t === tab) {
-                    btn.style.borderBottomColor = '#2563eb';
-                    btn.style.color = '#2563eb';
+                    btn.style.borderBottomColor = '#ec4899';
+                    btn.style.color = '#db2777';
                     btn.style.fontWeight = '900';
-                    btn.style.background = '#eff6ff';
+                    btn.style.background = '#fce7f3';
                     content.style.display = 'block';
                 } else {
                     btn.style.borderBottomColor = 'transparent';
@@ -591,7 +591,7 @@
             const container = document.getElementById('modalNextApptContent');
             
             if (!currVac.nextAge || !vaccineSchedules[currVac.nextAge]) {
-                container.innerHTML = `<div style="background: #eff6ff; border: 2px solid #60a5fa; border-radius: 1rem; padding: 1.5rem; text-align: center;"><span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">🎉</span><span style="color: #1e3a8a; font-weight: 900;">นี่เป็นวัคซีนเข็มสุดท้ายตามกำหนดแล้วครับ!</span></div>`;
+                container.innerHTML = `<div style="background: #fdf2f8; border: 2px solid #f472b6; border-radius: 1rem; padding: 1.5rem; text-align: center;"><span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">🎉</span><span style="color: #9d174d; font-weight: 900;">นี่เป็นวัคซีนเข็มสุดท้ายตามกำหนดแล้วครับ!</span></div>`;
                 container.style.display = 'block'; 
                 document.getElementById('modalCalendarArea').style.display = 'none'; 
                 return;
@@ -634,7 +634,7 @@
 
             if (bDate) {
                 const fAge = calculateDetailedAge(bDate, apptDate);
-                html += `<div style="background: #dbeafe; color: #1e3a8a; font-size: 11px; font-weight: 700; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; border: 1px solid #bfdbfe;">
+                html += `<div style="background: #fdf2f8; color: #9d174d; font-size: 11px; font-weight: 700; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; border: 1px solid #fbcfe8;">
                             <span>👶 อายุในวันนัด:</span> <span>${fAge.years} ปี ${fAge.months} เดือน ${fAge.days} วัน (${fAge.weeks} wk)</span>
                          </div>`;
             }
@@ -652,7 +652,7 @@
                             <div style="font-size: 0.75rem; font-weight: 900; color: #1e293b;">${d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.25rem; border-top: 1px solid #f1f5f9; padding-top: 0.25rem;">
                                 <span style="font-size: 9px; font-family: monospace; color: #64748b;">${hd}</span>
-                                <button onclick="copyDateText(event,'${hd}')" style="color: #2563eb; background: transparent; border: none; font-size: 10px; font-weight: 700; cursor: pointer;">Copy</button>
+                                <button onclick="copyDateText(event,'${hd}')" style="color: #ec4899; background: transparent; border: none; font-size: 10px; font-weight: 700; cursor: pointer;">Copy</button>
                             </div>
                          </div>`;
             });
@@ -694,7 +694,7 @@
 
             if (bDate) {
                 const fAge = calculateDetailedAge(bDate, apptDate);
-                html += `<div style="background: #dbeafe; color: #1e3a8a; font-size: 11px; font-weight: 700; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; border: 1px solid #bfdbfe;">
+                html += `<div style="background: #fdf2f8; color: #9d174d; font-size: 11px; font-weight: 700; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; border: 1px solid #fbcfe8;">
                             <span>👶 อายุเด็กในวันที่ฉีด:</span> <span>${fAge.years} ปี ${fAge.months} เดือน ${fAge.days} วัน</span>
                          </div>`;
             }
@@ -712,7 +712,7 @@
                             <div style="font-size: 0.75rem; font-weight: 900; color: #1e293b;">${d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</div>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.25rem; border-top: 1px solid #f1f5f9; padding-top: 0.25rem;">
                                 <span style="font-size: 9px; font-family: monospace; color: #64748b;">${hd}</span>
-                                <button onclick="copyDateText(event,'${hd}')" style="color: #2563eb; background: transparent; border: none; font-size: 10px; font-weight: 700; cursor: pointer;">Copy</button>
+                                <button onclick="copyDateText(event,'${hd}')" style="color: #ec4899; background: transparent; border: none; font-size: 10px; font-weight: 700; cursor: pointer;">Copy</button>
                             </div>
                          </div>`;
             });
@@ -750,22 +750,22 @@
             const firstDay = new Date(y, m, 1), start = new Date(firstDay); start.setDate(start.getDate() - firstDay.getDay());
             
             let html = `
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; background: #f1f5f9; padding: 0.25rem; border-radius: 0.25rem;">
-                    <button onclick="calBaseDate.setMonth(calBaseDate.getMonth()-1); renderCal()" style="border: none; background: transparent; cursor: pointer; font-weight: bold;">◀</button>
-                    <span style="font-weight: 900; font-size: 0.75rem; color: #1e293b;">${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m]} ${y+543}</span>
-                    <button onclick="calBaseDate.setMonth(calBaseDate.getMonth()+1); renderCal()" style="border: none; background: transparent; cursor: pointer; font-weight: bold;">▶</button>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; background: #fdf2f8; padding: 0.25rem; border-radius: 0.25rem; border: 1px solid #fbcfe8;">
+                    <button onclick="calBaseDate.setMonth(calBaseDate.getMonth()-1); renderCal()" style="border: none; background: transparent; cursor: pointer; font-weight: bold; color: #be185d;">◀</button>
+                    <span style="font-weight: 900; font-size: 0.75rem; color: #831843;">${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m]} ${y+543}</span>
+                    <button onclick="calBaseDate.setMonth(calBaseDate.getMonth()+1); renderCal()" style="border: none; background: transparent; cursor: pointer; font-weight: bold; color: #be185d;">▶</button>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 10px; font-weight: bold; margin-bottom: 0.25rem;"><div style="color: #ef4444;">อา</div><div>จ</div><div>อ</div><div style="color: #16a34a;">พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div>
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 10px; font-weight: bold; margin-bottom: 0.25rem;"><div style="color: #ef4444;">อา</div><div>จ</div><div>อ</div><div style="color: #db2777;">พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div>
                 <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;">`;
             
             let dDate = new Date(start);
             for (let i = 0; i < 42; i++) {
                 const isCur = dDate.getMonth() === m, isTd = dDate.toDateString() === today.toDateString(), isSel = dDate.toDateString() === calSelDate.toDateString(), isHol = getHolidayForDate(dDate);
                 
-                let bg = isSel ? '#22c55e' : isHol ? '#f87171' : isCur ? '#f8fafc' : '#ffffff';
-                let color = isSel || isHol ? '#ffffff' : isCur ? '#1e293b' : '#cbd5e1';
+                let bg = isSel ? '#ec4899' : isHol ? '#f87171' : isCur ? '#fdf2f8' : '#ffffff';
+                let color = isSel || isHol ? '#ffffff' : isCur ? '#831843' : '#cbd5e1';
                 
-                html += `<div style="background: ${bg}; color: ${color}; padding: 0.25rem; text-align: center; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 700; ${isTd?'border: 1px solid #3b82f6;':''}" title="${isHol||''}">${dDate.getDate()}</div>`; 
+                html += `<div style="background: ${bg}; color: ${color}; padding: 0.25rem; text-align: center; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 700; ${isTd?'border: 1px solid #ec4899;':''}" title="${isHol||''}">${dDate.getDate()}</div>`; 
                 dDate.setDate(dDate.getDate()+1);
             }
             document.getElementById('calendarContainer').innerHTML = html + '</div>';
@@ -774,13 +774,13 @@
         function generateHolidayList() {
             const currentYear = new Date().getFullYear();
             let html = `
-                <div style="margin-bottom: 1rem; background: white; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <div style="margin-bottom: 1rem; background: white; border: 1px solid #fbcfe8; border-radius: 0.5rem; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
                     <div style="font-size: 0.875rem; font-weight: 700; color: #334155;">
-                        ประเภท: <span style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">🏛️ ปกติ</span> | <span style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">🌙 ศาสนา</span> | <span style="background: #ffedd5; color: #c2410c; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">🌟 วันหยุดพิเศษ</span>
+                        ประเภท: <span style="background: #fdf2f8; color: #be185d; padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid #fbcfe8;">🏛️ ปกติ</span> | <span style="background: #fdf2f8; color: #be185d; padding: 0.25rem 0.5rem; border-radius: 0.25rem; border: 1px solid #fbcfe8;">🌙 ศาสนา</span> | <span style="background: #ffedd5; color: #c2410c; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">🌟 วันหยุดพิเศษ</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; background: #eff6ff; padding: 0.5rem; border-radius: 0.5rem;">
-                        <label style="font-weight: 700; color: #1e40af; font-size: 0.875rem;">📅 เลือกปีปฏิทิน:</label>
-                        <select id="holidayYearSelect" onchange="updateHolidayDisplay()" style="border: none; background: transparent; color: #2563eb; font-weight: 900; font-size: 1rem; cursor: pointer;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; background: #fdf2f8; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #fbcfe8;">
+                        <label style="font-weight: 700; color: #9d174d; font-size: 0.875rem;">📅 เลือกปีปฏิทิน:</label>
+                        <select id="holidayYearSelect" onchange="updateHolidayDisplay()" style="border: none; background: transparent; color: #db2777; font-weight: 900; font-size: 1rem; cursor: pointer;">
                             ${[...Array(10)].map((_, i) => {
                                 const y = 2024 + i;
                                 return `<option value="${y}" ${y === currentYear ? 'selected' : ''}>พ.ศ. ${y + 543}</option>`;
@@ -800,13 +800,13 @@
             const today = new Date(); today.setHours(0,0,0,0);
 
             let tableHtml = `
-                <div style="background: white; border-radius: 0.5rem; border: 1px solid #e2e8f0; overflow: hidden;">
+                <div style="background: white; border-radius: 0.5rem; border: 1px solid #fbcfe8; overflow: hidden;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
                         <thead>
-                            <tr style="background: #f1f5f9; border-bottom: 1px solid #e2e8f0;">
-                                <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 900; color: #334155;">วันที่</th>
-                                <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 900; color: #334155;">ชื่อวันหยุด / เทศกาล</th>
-                                <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 900; color: #334155;">ประเภท</th>
+                            <tr style="background: #fdf2f8; border-bottom: 1px solid #fbcfe8;">
+                                <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 900; color: #831843;">วันที่</th>
+                                <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 900; color: #831843;">ชื่อวันหยุด / เทศกาล</th>
+                                <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 900; color: #831843;">ประเภท</th>
                             </tr>
                         </thead>
                         <tbody>`;
@@ -821,10 +821,10 @@
                     
                     const typeBadge = h.type === 'dynamic' 
                         ? `<span style="background: linear-gradient(to right, #fb923c, #f87171); color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 900;">🌟 พิเศษ</span>` 
-                        : `<span style="background: #f1f5f9; color: #475569; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; border: 1px solid #e2e8f0;">${h.type === 'fixed' ? '🏛️ ปกติ' : '🌙 ศาสนา'}</span>`;
+                        : `<span style="background: #fdf2f8; color: #9d174d; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; border: 1px solid #fbcfe8;">${h.type === 'fixed' ? '🏛️ ปกติ' : '🌙 ศาสนา'}</span>`;
 
                     tableHtml += `
-                        <tr style="border-bottom: 1px solid #f1f5f9; ${isPast ? 'background: #f8fafc;' : ''}">
+                        <tr style="border-bottom: 1px solid #fce7f3; ${isPast ? 'background: #f8fafc;' : ''}">
                             <td style="padding: 0.75rem 1rem; ${style}">${dateStr}</td>
                             <td style="padding: 0.75rem 1rem; ${style}">${h.name}</td>
                             <td style="padding: 0.75rem 1rem; text-align: center;">${typeBadge}</td>
