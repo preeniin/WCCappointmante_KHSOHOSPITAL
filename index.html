@@ -275,7 +275,7 @@
         }
 
         async function fetchSpecialHolidays() {
-            const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTeNaf6KixwzfXU2ZMvwhe1fPvWbfTkmzZGwQnuMKKNdMZzmsWYrsdYQqL1MxYhXPiuZeDlhQ12Bp2j/pub?output=csv'; 
+            const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTeNaf6KixwzfXU2ZMvwhe1fPvWbfTkmzZGwQnuMKKNdMZzmsWYrsdYQqL1MxYhXPiuZeDlhQ12Bp2j/pub?gid=2105451323&single=true&output=csv'; 
             const response = await fetch(csvUrl + '&t=' + new Date().getTime());
             const data = await response.text();
             
@@ -302,7 +302,7 @@
         }
 
         async function fetchVaccineSchedules() {
-            const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSh9GQi2VKFlufPsIOFGblKZVB8hAzHg-JW68Z1tyco9R_IXOnlqQ44uZDV9nxAuf-dihXFJTukJnUp/pub?gid=1776265610&single=true&output=csv';
+            const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTeNaf6KixwzfXU2ZMvwhe1fPvWbfTkmzZGwQnuMKKNdMZzmsWYrsdYQqL1MxYhXPiuZeDlhQ12Bp2j/pub?gid=2105451323&single=true&output=csv';
             const response = await fetch(csvUrl + '&t=' + new Date().getTime());
             const data = await response.text();
             
