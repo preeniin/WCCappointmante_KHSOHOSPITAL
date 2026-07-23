@@ -1,746 +1,854 @@
-    /* Modal Animation - Fast */
-    .modal-enter { animation: modalFadeIn 0.15s ease-out forwards; }
-    @keyframes modalFadeIn {
-        from { opacity: 0; transform: scale(0.98); }
-        to { opacity: 1; transform: scale(1); }
-    }
-</style>
-
-
- <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 shadow-sm">
-  <h3 class="text-sm font-bold text-blue-800 mb-1 flex items-center">💡 รองรับการก๊อปปี้วาง (Paste) จาก HosXP</h3>
-  <p class="text-xs text-blue-700">สามารถก๊อปปี้วันเกิดทั้งรูปแบบ พ.ศ. (เช่น <code class="bg-blue-100 px-1 rounded font-bold">23/07/2567</code>) หรือ ค.ศ. (เช่น <code class="bg-blue-100 px-1 rounded font-bold">2024-07-23</code>) มาวางลงในช่องได้เลย ระบบจะคำนวณอัตโนมัติ</p>
- </div>
-
- <div class="space-y-5">
-  <div>
-   <label class="block text-sm font-black text-gray-700 mb-2">🎈 วันเกิดเด็ก (ก๊อปปี้จาก HosXP มาวางได้เลย)</label> 
-   <input type="text" id="birthDate" placeholder="วาง หรือ พิมพ์ เช่น 23/07/2567 หรือ 2024-07-23" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-bold text-lg text-gray-700 shadow-sm transition">
-  </div>
-  <div>
-   <label class="block text-sm font-black text-gray-700 mb-2">🏥 วันที่มารับบริการ (วันนี้)</label> 
-   <input type="date" id="visitDate" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-bold text-lg text-gray-700 shadow-sm transition">
-  </div>
- </div>
- 
- <button onclick="calculateAge()" class="mt-8 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all font-black shadow-lg shadow-blue-500/30 text-xl transform hover:-translate-y-1"> 
-    🚀 คำนวณวันนัด 
- </button>
-</div>
-
-
- <div class="mb-6">
-  <label class="block text-sm font-black text-gray-700 mb-2">👉 ระบุช่วงอายุของวัคซีนที่ต้องการตรวจสอบ</label> 
-  <select id="delayedAge" class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-bold text-lg shadow-sm cursor-pointer transition"> 
-   <option value="">-- รอโหลดข้อมูลวัคซีน... --</option> 
-  </select>
- </div>
- 
- <div class="bg-gray-50 border border-gray-200 p-4 rounded-xl mb-6 text-sm text-gray-600 font-medium">
-     💡 <strong class="text-gray-800">การทำงาน:</strong> ระบบจะแสดงวันที่คลินิกเปิดให้บริการสำหรับ <strong class="text-orange-600">"ช่วงอายุที่เลือก"</strong> เท่านั้น (เหมาะสำหรับกรณีเด็กมาผิดนัด หรือต้องการทราบวันฉีดของอายุนั้นๆ โดยตรง)
- </div>
-
- <button onclick="calculateDelayedVaccine()" class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-4 rounded-xl hover:from-orange-600 hover:to-red-600 transition-all font-black shadow-lg shadow-orange-500/30 text-xl transform hover:-translate-y-1"> 
-    🔍 ค้นหาวันที่ให้บริการ 
- </button>
-</div>
-
-
-    <div id="fullScheduleContainer" class="text-center py-10 text-gray-400 font-bold animate-pulse">
-        กำลังประมวลผลตารางวัคซีน...
-    </div>
-</div>
-
-
-    <div id="holidayListContent">
-        </div>
-</div>
-
-
-<div class="bg-slate-800 text-white p-3 sm:p-4 flex justify-between items-center shadow-md z-10">
- <h2 id="modalTitle" class="text-lg md:text-xl font-black flex items-center tracking-wide">
-  <span class="text-2xl mr-2">✨</span> สรุปผลการคำนวณ
- </h2>
- <button onclick="closeResultModal()" class="bg-slate-700 hover:bg-red-500 text-white rounded-lg px-4 py-2 transition-colors font-bold text-sm shadow flex items-center border border-slate-600 hover:border-red-400">
-  <span class="mr-1">❌</span> ปิด (ESC)
- </button>
-</div>
-
-<div class="p-3 md:p-6 overflow-y-auto flex-1 flex flex-col gap-4 bg-[#f8fafc]">
+<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบนัดหมายคลินิกฉีดวัคซีน WCC อัจฉริยะ - โรงพยาบาลคลองหาด</title>
+    <!-- Tailwind CDN with fallback -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     
-    <div id="modalAgeSection" class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 hidden">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div class="bg-blue-50 border border-blue-200 p-2 rounded-lg flex flex-col justify-center items-center text-center shadow-inner">
-                <span class="text-blue-600 font-bold text-[11px] mb-1">อายุ (ปี เดือน วัน)</span>
-                <span id="modalAgeYMD" class="text-base md:text-lg font-black text-blue-900 leading-none"></span>
-            </div>
-            <div class="bg-blue-50 border border-blue-200 p-2 rounded-lg flex flex-col justify-center items-center text-center shadow-inner">
-                <span class="text-blue-600 font-bold text-[11px] mb-1">อายุ (สัปดาห์)</span>
-                <span id="modalAgeWeeks" class="text-base md:text-lg font-black text-blue-900 leading-none"></span>
-            </div>
-            <div class="col-span-2 bg-gray-50 border border-gray-200 p-2.5 rounded-lg flex flex-col justify-between shadow-inner">
-                <div class="flex justify-between items-center mb-1.5">
-                    <span class="text-gray-700 font-black text-xs flex items-center">📝 ข้อความแนะนำ (ก๊อปปี้ลง HosXP ได้เลย)</span>
-                    <button onclick="copyStaffText()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-xs font-bold transition shadow-sm border border-blue-700">📋 คัดลอกข้อความ</button>
+    <style>
+        /* Base Reset & Fallback Styles (พึ่งพาตัวเองได้แม้โดนบล็อก Tailwind CDN) */
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Sarabun', sans-serif; 
+            background-color: #f0fdfa; 
+            margin: 0; 
+            padding: 0; 
+            color: #1e293b;
+        }
+        
+        /* Direct SVG Constraints (ป้องกันรูปขยายใหญ่คับจอ) */
+        svg { 
+            max-width: 100%; 
+            max-height: 100%; 
+            display: inline-block; 
+            vertical-align: middle; 
+        }
+
+        .vaccine-card { transition: transform 0.15s ease; }
+        .vaccine-card:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .calendar-day { transition: all 0.2s ease; }
+        .calendar-day:hover { background-color: #e0f2fe; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Modal Animation - Fast */
+        .modal-enter { animation: modalFadeIn 0.15s ease-out forwards; }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Fallback Basic Layout Styles */
+        input, select, button { font-family: inherit; }
+        .btn-primary {
+            background: linear-gradient(to right, #2563eb, #4f46e5);
+            color: white;
+            font-weight: 900;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn-primary:hover { opacity: 0.95; }
+    </style>
+</head>
+<body class="min-h-screen">
+  <div class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white p-4 md:p-6 shadow-lg" style="background: linear-gradient(to right, #0d9488, #0891b2); color: white; padding: 1.5rem;">
+   <div class="max-w-5xl mx-auto" style="max-width: 64rem; margin: 0 auto;">
+    <div class="text-center mb-3" style="text-align: center; margin-bottom: 0.75rem;">
+     <div class="inline-flex items-center bg-white bg-opacity-20 rounded-full px-4 py-1.5 shadow-sm" style="display: inline-flex; align-items: center; background: rgba(255,255,255,0.2); border-radius: 9999px; padding: 0.375rem 1rem;">
+      <span class="text-white text-xs font-bold tracking-wide">✨ เวอร์ชัน 41 (Smart HosXP BirthDate Parser + Standalone Style)</span> 
+      <span class="text-teal-100 text-xs ml-2 border-l border-teal-300 pl-2" id="syncStatus" style="margin-left: 0.5rem; padding-left: 0.5rem; border-left: 1px solid rgba(255,255,255,0.4);">กำลังเชื่อมต่อฐานข้อมูล...</span>
+     </div>
+    </div>
+    <div class="flex items-center justify-between" style="display: flex; align-items: center; justify-content: space-between;">
+     <div class="flex items-center space-x-4" style="display: flex; align-items: center; gap: 1rem;">
+      <div class="bg-white p-2 md:p-3 rounded-full shadow-md" style="background: white; padding: 0.5rem; border-radius: 9999px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+       <svg style="width: 32px; height: 32px; color: #0d9488;" fill="currentColor" viewBox="0 0 24 24">
+        <circle cx="12" cy="10" r="8" fill="#FFE4B5" stroke="currentColor" stroke-width="1" /> 
+        <circle cx="9" cy="8" r="1" fill="currentColor" /> <circle cx="15" cy="8" r="1" fill="currentColor" /> 
+        <path d="M8 12 Q12 16 16 12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" /> 
+        <path d="M6 6 Q12 2 18 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" /> 
+        <path d="M11 5 L13 5 M12 4 L12 6" stroke="#FF6B6B" stroke-width="1.5" stroke-linecap="round" />
+       </svg>
+      </div>
+      <div>
+       <h1 class="text-xl md:text-2xl font-black tracking-tight text-white drop-shadow-sm" style="font-size: 1.5rem; font-weight: 900; margin: 0;">ระบบนัดหมายวัคซีน WCC</h1>
+       <p class="text-teal-100 text-sm font-medium" style="margin: 0; opacity: 0.9; font-size: 0.875rem;">โรงพยาบาลคลองหาด</p>
+      </div>
+     </div>
+     <div class="text-right hidden md:block">
+      <div id="currentDateTime" class="text-lg font-bold drop-shadow-sm" style="font-size: 1.125rem; font-weight: 700;"></div>
+      <div class="flex space-x-2 mt-2 justify-end" style="margin-top: 0.5rem;">
+       <button onclick="resetAll()" class="bg-white text-teal-700 px-6 py-2 rounded-lg hover:bg-teal-50 font-bold text-sm shadow transition" style="background: white; color: #0f766e; padding: 0.5rem 1.25rem; border-radius: 0.5rem; border: none; font-weight: 700; cursor: pointer;"> 🔄 รีเซ็ตข้อมูล (เริ่มใหม่) </button>
+      </div>
+     </div>
+    </div>
+    <div class="flex space-x-2 mt-4 justify-center md:hidden" style="margin-top: 1rem;">
+        <button onclick="resetAll()" class="bg-white text-teal-700 px-4 py-2 rounded-lg font-bold text-sm shadow flex-1" style="background: white; color: #0f766e; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; font-weight: 700; cursor: pointer; width: 100%;"> 🔄 รีเซ็ตข้อมูล (เริ่มใหม่) </button>
+    </div>
+   </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto p-4 md:p-6" style="max-width: 64rem; margin: 0 auto; padding: 1.5rem;">
+   <div class="bg-white rounded-xl shadow-md mb-6 overflow-x-auto no-scrollbar border border-gray-100" style="background: white; border-radius: 0.75rem; margin-bottom: 1.5rem; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+    <div class="flex border-b min-w-max" style="display: flex; border-bottom: 1px solid #e2e8f0;">
+     <button onclick="showTab('normal')" id="normalTab" class="flex-1 py-4 px-6 text-center font-black text-blue-600 border-b-4 border-blue-600 bg-blue-50/50 whitespace-nowrap transition-colors" style="flex: 1; padding: 1rem 1.5rem; border: none; border-bottom: 4px solid #2563eb; background: #eff6ff; color: #2563eb; font-weight: 900; cursor: pointer;">
+      <div class="flex items-center justify-center space-x-2" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+       <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 20 20"><path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" /></svg><span>นัดหมายตามอายุ</span>
+      </div>
+     </button> 
+     <button onclick="showTab('delayed')" id="delayedTab" class="flex-1 py-4 px-6 text-center font-bold text-gray-500 hover:text-orange-600 border-b-4 border-transparent hover:bg-gray-50 whitespace-nowrap transition-colors" style="flex: 1; padding: 1rem 1.5rem; border: none; border-bottom: 4px solid transparent; background: transparent; color: #64748b; font-weight: 700; cursor: pointer;">
+      <div class="flex items-center justify-center space-x-2" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+       <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" /></svg><span>ค้นหาวันฉีด / ล่าช้า</span>
+      </div>
+     </button>
+     <button onclick="showTab('schedule')" id="scheduleTab" class="flex-1 py-4 px-6 text-center font-bold text-gray-500 hover:text-green-600 border-b-4 border-transparent hover:bg-gray-50 whitespace-nowrap transition-colors" style="flex: 1; padding: 1rem 1.5rem; border: none; border-bottom: 4px solid transparent; background: transparent; color: #64748b; font-weight: 700; cursor: pointer;">
+      <div class="flex items-center justify-center space-x-2" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+       <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" /></svg><span>แผนการฉีดวัคซีน</span>
+      </div>
+     </button>
+     <button onclick="showTab('holiday')" id="holidayTab" class="flex-1 py-4 px-6 text-center font-bold text-gray-500 hover:text-red-600 border-b-4 border-transparent hover:bg-gray-50 whitespace-nowrap transition-colors" style="flex: 1; padding: 1rem 1.5rem; border: none; border-bottom: 4px solid transparent; background: transparent; color: #64748b; font-weight: 700; cursor: pointer;">
+      <div class="flex items-center justify-center space-x-2" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+       <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM4 8h12v8H4V8z" clip-rule="evenodd" /></svg><span>ปฏิทินวันหยุด</span>
+      </div>
+     </button>
+    </div>
+   </div>
+
+   <div id="normalContent" class="max-w-2xl mx-auto" style="max-width: 42rem; margin: 0 auto;">
+    <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100" style="background: white; border-radius: 1rem; padding: 2rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); border: 1px solid #f1f5f9;">
+     <h2 class="text-xl font-black text-gray-800 mb-6 flex items-center border-b pb-4" style="font-size: 1.25rem; font-weight: 900; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; display: flex; align-items: center;">
+      <span class="bg-blue-100 text-blue-600 p-2 rounded-lg mr-3" style="background: #dbeafe; color: #2563eb; padding: 0.5rem; border-radius: 0.5rem; margin-right: 0.75rem; display: inline-flex;"><svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></span>
+      ข้อมูลเด็ก (นัดตามเกณฑ์)
+     </h2>
+     
+     <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 shadow-sm" style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem;">
+      <h3 class="text-sm font-bold text-blue-800 mb-1 flex items-center" style="font-size: 0.875rem; font-weight: 700; color: #1e40af; margin: 0 0 0.25rem 0;">💡 รองรับการก๊อปปี้วาง (Paste) จาก HosXP</h3>
+      <p class="text-xs text-blue-700" style="font-size: 0.75rem; color: #1d4ed8; margin: 0;">สามารถก๊อปปี้วันเกิดทั้งรูปแบบ พ.ศ. (เช่น <code style="background: #dbeafe; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-weight: bold;">23/07/2567</code>) หรือ ค.ศ. (เช่น <code style="background: #dbeafe; padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-weight: bold;">2024-07-23</code>) มาวางลงในช่องได้เลย ระบบจะคำนวณอัตโนมัติ</p>
+     </div>
+
+     <div class="space-y-5" style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <div>
+       <label class="block text-sm font-black text-gray-700 mb-2" style="display: block; font-size: 0.875rem; font-weight: 900; color: #334155; margin-bottom: 0.5rem;">🎈 วันเกิดเด็ก (ก๊อปปี้จาก HosXP มาวางได้เลย)</label> 
+       <input type="text" id="birthDate" placeholder="วาง หรือ พิมพ์ เช่น 23/07/2567 หรือ 2024-07-23" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-bold text-lg text-gray-700 shadow-sm transition" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; font-weight: 700; font-size: 1.125rem; color: #334155;">
+      </div>
+      <div>
+       <label class="block text-sm font-black text-gray-700 mb-2" style="display: block; font-size: 0.875rem; font-weight: 900; color: #334155; margin-bottom: 0.5rem;">🏥 วันที่มารับบริการ (วันนี้)</label> 
+       <input type="date" id="visitDate" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-bold text-lg text-gray-700 shadow-sm transition" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; font-weight: 700; font-size: 1.125rem; color: #334155;">
+      </div>
+     </div>
+     
+     <button onclick="calculateAge()" class="mt-8 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all font-black shadow-lg shadow-blue-500/30 text-xl transform hover:-translate-y-1" style="margin-top: 2rem; width: 100%; background: linear-gradient(to right, #2563eb, #4f46e5); color: white; padding: 1rem; border-radius: 0.75rem; font-weight: 900; font-size: 1.25rem; border: none; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);"> 
+        🚀 คำนวณวันนัด 
+     </button>
+    </div>
+   </div>
+
+   <div id="delayedContent" class="max-w-2xl mx-auto hidden" style="max-width: 42rem; margin: 0 auto;">
+    <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100" style="background: white; border-radius: 1rem; padding: 2rem; border: 1px solid #f1f5f9;">
+     <h2 class="text-xl font-black text-gray-800 mb-6 flex items-center border-b pb-4" style="font-size: 1.25rem; font-weight: 900; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; display: flex; align-items: center;">
+      <span class="bg-orange-100 text-orange-600 p-2 rounded-lg mr-3" style="background: #ffedd5; color: #ea580c; padding: 0.5rem; border-radius: 0.5rem; margin-right: 0.75rem; display: inline-flex;"><svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" /></svg></span>
+      ค้นหาวันที่ให้บริการตามช่วงอายุ
+     </h2>
+     
+     <div class="mb-6" style="margin-bottom: 1.5rem;">
+      <label class="block text-sm font-black text-gray-700 mb-2" style="display: block; font-size: 0.875rem; font-weight: 900; color: #334155; margin-bottom: 0.5rem;">👉 ระบุช่วงอายุของวัคซีนที่ต้องการตรวจสอบ</label> 
+      <select id="delayedAge" class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-bold text-lg shadow-sm cursor-pointer transition" style="width: 100%; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; font-weight: 700; font-size: 1.125rem;"> 
+       <option value="">-- รอโหลดข้อมูลวัคซีน... --</option> 
+      </select>
+     </div>
+     
+     <div class="bg-gray-50 border border-gray-200 p-4 rounded-xl mb-6 text-sm text-gray-600 font-medium" style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 1rem; border-radius: 0.75rem; margin-bottom: 1.5rem; font-size: 0.875rem;">
+         💡 <strong style="color: #1e293b;">การทำงาน:</strong> ระบบจะแสดงวันที่คลินิกเปิดให้บริการสำหรับ <strong style="color: #ea580c;">"ช่วงอายุที่เลือก"</strong> เท่านั้น (เหมาะสำหรับกรณีเด็กมาผิดนัด หรือต้องการทราบวันฉีดของอายุนั้นๆ โดยตรง)
+     </div>
+
+     <button onclick="calculateDelayedVaccine()" class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-4 rounded-xl hover:from-orange-600 hover:to-red-600 transition-all font-black shadow-lg shadow-orange-500/30 text-xl transform hover:-translate-y-1" style="width: 100%; background: linear-gradient(to right, #f97316, #ef4444); color: white; padding: 1rem; border-radius: 0.75rem; font-weight: 900; font-size: 1.25rem; border: none; cursor: pointer;"> 
+        🔍 ค้นหาวันที่ให้บริการ 
+     </button>
+    </div>
+   </div>
+
+   <div id="scheduleContent" class="space-y-6 hidden">
+    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border-t-8 border-green-500" style="background: white; border-radius: 1rem; padding: 2rem; border-top: 8px solid #22c55e;">
+        <h2 class="text-2xl font-black text-gray-800 mb-2 flex items-center" style="font-size: 1.5rem; font-weight: 900; display: flex; align-items: center; margin-bottom: 0.5rem;">
+            <svg style="width: 32px; height: 32px; color: #16a34a; margin-right: 0.5rem;" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" /></svg> 
+            แผนการฉีดวัคซีน (WCC Schedule)
+        </h2>
+        <p class="text-sm text-gray-600 mb-8 border-b pb-4 font-medium" style="color: #475569; margin-bottom: 2rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">ตารางวัคซีนอ้างอิง ข้อมูลซิงค์โดยตรงจากฐานข้อมูล Google Sheets</p>
+        
+        <div id="fullScheduleContainer" class="text-center py-10 text-gray-400 font-bold animate-pulse" style="text-align: center; padding: 2.5rem 0; color: #94a3b8; font-weight: 700;">
+            กำลังประมวลผลตารางวัคซีน...
+        </div>
+    </div>
+   </div>
+
+   <div id="holidayContent" class="space-y-6 hidden">
+    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border-t-8 border-red-500" style="background: white; border-radius: 1rem; padding: 2rem; border-top: 8px solid #ef4444;">
+        <h2 class="text-2xl font-black text-gray-800 mb-6 flex items-center border-b pb-4" style="font-size: 1.5rem; font-weight: 900; display: flex; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem;">
+            <svg style="width: 32px; height: 32px; color: #ef4444; margin-right: 0.5rem;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM4 8h12v8H4V8z" clip-rule="evenodd" /></svg> 
+            ฐานข้อมูลวันหยุด WCC (พ.ศ. 2567-2576)
+        </h2>
+        
+        <div id="holidayListContent"></div>
+    </div>
+   </div>
+
+  </div>
+
+  <div id="resultModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] hidden flex flex-col items-center justify-center p-2 sm:p-6 transition-opacity duration-150" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); z-index: 100; display: none; align-items: center; justify-center: center; padding: 1rem;">
+   <div class="bg-gray-100 rounded-2xl shadow-2xl w-full max-w-6xl flex flex-col overflow-hidden max-h-[98vh] modal-enter border border-white/20" style="background: #f8fafc; border-radius: 1rem; width: 100%; max-width: 72rem; max-height: 95vh; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);">
+    
+    <div class="bg-slate-800 text-white p-3 sm:p-4 flex justify-between items-center shadow-md z-10" style="background: #1e293b; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+     <h2 id="modalTitle" class="text-lg md:text-xl font-black flex items-center tracking-wide" style="font-size: 1.25rem; font-weight: 900; margin: 0;">
+      <span style="font-size: 1.5rem; margin-right: 0.5rem;">✨</span> สรุปผลการคำนวณ
+     </h2>
+     <button onclick="closeResultModal()" class="bg-slate-700 hover:bg-red-500 text-white rounded-lg px-4 py-2 transition-colors font-bold text-sm shadow flex items-center border border-slate-600 hover:border-red-400" style="background: #334155; color: white; border-radius: 0.5rem; padding: 0.5rem 1rem; border: 1px solid #475569; font-weight: 700; cursor: pointer;">
+      <span style="margin-right: 0.25rem;">❌</span> ปิด (ESC)
+     </button>
+    </div>
+    
+    <div class="p-3 md:p-6 overflow-y-auto flex-1 flex flex-col gap-4 bg-[#f8fafc]" style="padding: 1.5rem; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 1rem;">
+        
+        <div id="modalAgeSection" class="bg-white rounded-xl shadow-sm border border-gray-200 p-3 hidden" style="background: white; border-radius: 0.75rem; border: 1px solid #e2e8f0; padding: 0.75rem;">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+                <div class="bg-blue-50 border border-blue-200 p-2 rounded-lg flex flex-col justify-center items-center text-center shadow-inner" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 0.5rem; border-radius: 0.5rem; text-align: center;">
+                    <span class="text-blue-600 font-bold text-[11px] mb-1" style="color: #2563eb; font-weight: 700; font-size: 11px;">อายุ (ปี เดือน วัน)</span>
+                    <span id="modalAgeYMD" class="text-base md:text-lg font-black text-blue-900 leading-none" style="font-size: 1.125rem; font-weight: 900; color: #1e3a8a;"></span>
                 </div>
-                <div id="staffText" class="text-[10px] text-gray-500 leading-tight">นั่งสังเกตอาการ 30 นาที หลังจากฉีดวัคซีน หากมีผื่นขึ้นตามร่างกาย ร้องกวนมาก ให้แจ้งเจ้าหน้าที่ เมื่อกลับบ้าน หากมีไข้ ให้เช็ดตัวลดไข้ รับประทานยาลดไข้ทุก 4-6 ชั่วโมง ถ้ามีอาการบวม แดง บริเวณที่ฉีดวัคซีนให้ประคบเย็น โดยใช้ผ้าห่อน้ำแข็ง /ไอซ์แพ็ค ประคบ ถ้ามีไข้สูงเกิน 3 วัน ให้กลับมาพบแพทย์<br>แผนการดูแลต่อเนื่อง<br>เฝ้าระวังอาการ AEFI หลังฉีดวัคซีน</div>
+                <div class="bg-blue-50 border border-blue-200 p-2 rounded-lg flex flex-col justify-center items-center text-center shadow-inner" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 0.5rem; border-radius: 0.5rem; text-align: center;">
+                    <span class="text-blue-600 font-bold text-[11px] mb-1" style="color: #2563eb; font-weight: 700; font-size: 11px;">อายุ (สัปดาห์)</span>
+                    <span id="modalAgeWeeks" class="text-base md:text-lg font-black text-blue-900 leading-none" style="font-size: 1.125rem; font-weight: 900; color: #1e3a8a;"></span>
+                </div>
+                <div class="col-span-2 bg-gray-50 border border-gray-200 p-2.5 rounded-lg flex flex-col justify-between shadow-inner" style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.625rem; border-radius: 0.5rem;">
+                    <div class="flex justify-between items-center mb-1.5" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.375rem;">
+                        <span class="text-gray-700 font-black text-xs flex items-center" style="color: #334155; font-weight: 900; font-size: 0.75rem;">📝 ข้อความแนะนำ (ก๊อปปี้ลง HosXP ได้เลย)</span>
+                        <button onclick="copyStaffText()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-xs font-bold transition shadow-sm border border-blue-700" style="background: #2563eb; color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer;">📋 คัดลอกข้อความ</button>
+                    </div>
+                    <div id="staffText" class="text-[10px] text-gray-500 leading-tight" style="font-size: 10px; color: #64748b; line-height: 1.3;">นั่งสังเกตอาการ 30 นาที หลังจากฉีดวัคซีน หากมีผื่นขึ้นตามร่างกาย ร้องกวนมาก ให้แจ้งเจ้าหน้าที่ เมื่อกลับบ้าน หากมีไข้ ให้เช็ดตัวลดไข้ รับประทานยาลดไข้ทุก 4-6 ชั่วโมง ถ้ามีอาการบวม แดง บริเวณที่ฉีดวัคซีนให้ประคบเย็น โดยใช้ผ้าห่อน้ำแข็ง /ไอซ์แพ็ค ประคบ ถ้ามีไข้สูงเกิน 3 วัน ให้กลับมาพบแพทย์<br>แผนการดูแลต่อเนื่อง<br>เฝ้าระวังอาการ AEFI หลังฉีดวัคซีน</div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="grid md:grid-cols-2 gap-4">
-        <div id="modalNextApptContent" class="hidden h-full"></div>
+        <div class="grid md:grid-cols-2 gap-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+            <div id="modalNextApptContent" class="hidden h-full"></div>
 
-        <div id="modalCurrentVaccineContent" class="hidden h-full"></div>
-    </div>
-    
-    <div id="modalCalendarArea" class="hidden mt-2">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden w-full max-w-lg mx-auto">
-            <div class="bg-gray-50 border-b border-gray-200 p-2 flex justify-between items-center">
-                <h3 class="text-xs font-black text-gray-600 flex items-center">
-                    <svg class="w-4 h-4 text-gray-400 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM4 8h12v8H4V8z"/></svg> 
-                    ปฏิทินเดือนที่นัด
-                </h3>
-            </div>
-            <div id="calendarContainer" class="p-2 bg-white"></div>
+            <div id="modalCurrentVaccineContent" class="hidden h-full"></div>
         </div>
+        
+        <div id="modalCalendarArea" class="hidden mt-2">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden w-full max-w-lg mx-auto" style="background: white; border-radius: 0.75rem; border: 1px solid #e2e8f0; max-width: 32rem; margin: 0 auto; overflow: hidden;">
+                <div class="bg-gray-50 border-b border-gray-200 p-2 flex justify-between items-center" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 0.5rem;">
+                    <h3 class="text-xs font-black text-gray-600 flex items-center" style="font-size: 0.75rem; font-weight: 900; color: #475569; margin: 0;">
+                        <svg style="width: 16px; height: 16px; color: #94a3b8; margin-right: 0.25rem;" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zM4 8h12v8H4V8z"/></svg> 
+                        ปฏิทินเดือนที่นัด
+                    </h3>
+                </div>
+                <div id="calendarContainer" class="p-2 bg-white" style="padding: 0.5rem; background: white;"></div>
+            </div>
+        </div>
+        
     </div>
-    
-</div>
+   </div>
+  </div>
 
+  <script>
+        function showResultModal(title) {
+            document.getElementById('modalTitle').innerHTML = `<span style="font-size: 1.5rem; margin-right: 0.5rem;">✨</span> ${title}`;
+            const modal = document.getElementById('resultModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
 
-    function closeResultModal() {
-        document.getElementById('resultModal').classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    }
+        function closeResultModal() {
+            document.getElementById('resultModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (!document.getElementById('resultModal').classList.contains('hidden')) {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
                 closeResultModal();
             }
-        }
-    });
-
-    // =========================================================
-    // 🌟🌟 ENGINE 1: ระบบดึงฐานข้อมูลแบบ Real-time (Google Sheets) 🌟🌟
-    // =========================================================
-    let dynamicHolidays = {};
-    let vaccineSchedules = {}; 
-    let isDataLoaded = false;
-
-    async function initSystem() {
-        try {
-            await Promise.all([fetchSpecialHolidays(), fetchVaccineSchedules()]);
-            isDataLoaded = true;
-            populateDelayedDropdown();
-            renderVaccineScheduleTab();
-            generateHolidayList(); // สร้างตารางวันหยุดในแท็บที่ 4
-            
-            document.getElementById('syncStatus').innerHTML = "✅ พร้อมใช้งาน";
-            document.getElementById('syncStatus').classList.replace('text-teal-100', 'text-teal-200');
-        } catch (error) {
-            console.error("🔥 WCC System Error:", error);
-            document.getElementById('syncStatus').innerHTML = "❌ ขัดข้อง กรุณารีเฟรช";
-            document.getElementById('syncStatus').classList.replace('text-teal-100', 'text-red-300');
-        }
-    }
-
-    async function fetchSpecialHolidays() {
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTeNaf6KixwzfXU2ZMvwhe1fPvWbfTkmzZGwQnuMKKNdMZzmsWYrsdYQqL1MxYhXPiuZeDlhQ12Bp2j/pub?gid=0&single=true&output=csv'; 
-        const response = await fetch(csvUrl + '&t=' + new Date().getTime());
-        const data = await response.text();
-        
-        const rows = data.split(/\r?\n/).slice(1); 
-        rows.forEach(row => {
-            if (!row.trim()) return;
-            const columns = row.split(',');
-            if (columns.length >= 2) {
-                let dateStr = columns[0].replace(/['"]/g, '').trim();
-                let holidayName = columns.slice(1).join(',').replace(/['"]/g, '').trim(); 
-                if (dateStr.includes('/')) {
-                    const p = dateStr.split('/');
-                    if (p.length === 3) {
-                        let p1 = parseInt(p[0]), p2 = parseInt(p[1]), y = parseInt(p[2]);
-                        if (y > 2500) y -= 543; 
-                        let m = p2, d = p1; 
-                        if (p1 > 12) { d = p1; m = p2; } else if (p2 > 12) { d = p2; m = p1; }
-                        dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    }
-                }
-                if (dateStr) dynamicHolidays[dateStr] = holidayName;
-            }
         });
-    }
 
-    async function fetchVaccineSchedules() {
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTeNaf6KixwzfXU2ZMvwhe1fPvWbfTkmzZGwQnuMKKNdMZzmsWYrsdYQqL1MxYhXPiuZeDlhQ12Bp2j/pub?gid=2105451323&single=true&output=csv';
-        const response = await fetch(csvUrl + '&t=' + new Date().getTime());
-        const data = await response.text();
-        
-        const rows = data.split(/\r?\n/).slice(1);
-        rows.forEach(row => {
-            if (!row.trim()) return;
-            const cols = []; let inQ = false, cur = "";
-            for (let i = 0; i < row.length; i++) {
-                if (row[i] === '"') inQ = !inQ; 
-                else if (row[i] === ',' && !inQ) { cols.push(cur.trim()); cur = ""; } 
-                else cur += row[i];
-            }
-            cols.push(cur.trim());
-            
-            if (cols.length >= 6) {
-                const code = cols[0].replace(/['"]/g, ''); if (!code) return;
-                const vacs = cols[2].replace(/['"]/g, '').split('|').map(v => {
-                    const p = v.split('/'); return { name: p[0]?p[0].trim():'', thai: p[1]?p[1].trim():'', type: p[2]?p[2].trim():'injection' };
-                }).filter(v => v.name !== '');
-                const weeks = cols[4].replace(/['"]/g, '').split(',').map(w => parseInt(w.trim())).filter(w => !isNaN(w));
+        let dynamicHolidays = {};
+        let vaccineSchedules = {}; 
+        let isDataLoaded = false;
+
+        async function initSystem() {
+            try {
+                await Promise.all([fetchSpecialHolidays(), fetchVaccineSchedules()]);
+                isDataLoaded = true;
+                populateDelayedDropdown();
+                renderVaccineScheduleTab();
+                generateHolidayList();
                 
-                vaccineSchedules[code] = {
-                    name: cols[1].replace(/['"]/g, ''), vaccines: vacs,
-                    schedule: cols[3].replace(/['"]/g, ''), weeks: weeks,
-                    time: cols[5].replace(/['"]/g, ''),
-                    nextAge: cols[6]?cols[6].replace(/['"]/g, ''):null,
-                    special: cols[7]?cols[7].replace(/['"]/g, ''):''
-                };
+                document.getElementById('syncStatus').innerHTML = "✅ พร้อมใช้งาน";
+                document.getElementById('syncStatus').style.color = "#a7f3d0";
+            } catch (error) {
+                console.error("🔥 WCC System Error:", error);
+                document.getElementById('syncStatus').innerHTML = "❌ ขัดข้อง กรุณารีเฟรช";
+                document.getElementById('syncStatus').style.color = "#fca5a5";
             }
-        });
-    }
-
-    function populateDelayedDropdown() {
-        const select = document.getElementById('delayedAge');
-        select.innerHTML = '<option value="">-- เลือกอายุที่ต้องการนัด --</option>';
-        Object.keys(vaccineSchedules).forEach(code => select.innerHTML += `<option value="${code}">${vaccineSchedules[code].name}</option>`);
-    }
-
-    // --- Render Tab แผนวัคซีน (แก้ไขแสดงเวลา Time) ---
-    function renderVaccineScheduleTab() {
-        let html = '<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">';
-        Object.keys(vaccineSchedules).forEach(code => {
-            const vac = vaccineSchedules[code];
-            let vacListHtml = vac.vaccines.map(v => `<div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200 flex items-start space-x-3 hover:bg-green-50 transition"><span class="text-xl leading-none pt-0.5">${v.type === 'injection' ? '💉' : '💊'}</span><div><div class="font-bold text-gray-800 text-sm">${v.name}</div><div class="text-xs text-gray-500 mt-0.5">${v.thai}</div></div></div>`).join('');
-            html += `
-                <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm hover:shadow-lg transition transform hover:-translate-y-1">
-                    <div class="flex items-center justify-between mb-4 border-b pb-3"><h3 class="text-lg font-black text-green-700">📌 อายุ ${vac.name}</h3></div>
-                    <div class="space-y-2 mb-4">${vacListHtml}</div>
-                    <div class="bg-blue-50 text-blue-800 text-xs px-3 py-2 rounded-lg font-bold flex flex-col gap-1 mb-2">
-                        <div class="flex items-center"><span class="mr-2">📅</span> รอบ: ${vac.schedule}</div>
-                        ${vac.time ? `<div class="flex items-center"><span class="mr-2">⏰</span> เวลา: ${vac.time}</div>` : ''}
-                    </div>
-                    ${vac.special ? `<div class="bg-red-50 text-red-700 p-2.5 rounded-lg text-xs font-bold flex items-start"><span class="mr-2">⚠️</span><span>${vac.special}</span></div>` : ''}
-                </div>`;
-        });
-        html += '</div>';
-        document.getElementById('fullScheduleContainer').innerHTML = html;
-        document.getElementById('fullScheduleContainer').classList.remove('animate-pulse', 'text-center', 'py-10', 'text-gray-400');
-    }
-
-    // โหลดข้อมูลเริ่มต้น
-    initSystem();
-
-    // =========================================================
-    // 🌟🌟 ENGINE 2: ฐานข้อมูลวันหยุดฝังตัว 🌟🌟
-    // =========================================================
-    const fixedHolidays = { '01-01': 'ปีใหม่', '04-06': 'จักรี', '04-13': 'สงกรานต์', '04-14': 'สงกรานต์', '04-15': 'สงกรานต์', '05-04': 'ฉัตรมงคล', '06-03': 'เฉลิมฯ ราชินี', '07-28': 'เฉลิมฯ ร.10', '08-12': 'แม่', '10-13': 'สวรรคต ร.9', '10-23': 'ปิยมหาราช', '12-05': 'พ่อ', '12-10': 'รัฐธรรมนูญ', '12-31': 'สิ้นปี' };
-    const buddhistHolidayOffsets = {
-        2024: { 'm': new Date(2024,1,24), 'v': new Date(2024,4,22), 'a': new Date(2024,6,20), 'k': new Date(2024,6,21) },
-        2025: { 'm': new Date(2025,1,12), 'v': new Date(2025,4,11), 'a': new Date(2025,6,10), 'k': new Date(2025,6,11) },
-        2026: { 'm': new Date(2026,2,3), 'v': new Date(2026,4,31), 'a': new Date(2026,6,29), 'k': new Date(2026,6,30) },
-        2027: { 'm': new Date(2027,1,21), 'v': new Date(2027,4,20), 'a': new Date(2027,6,18), 'k': new Date(2027,6,19) }
-    };
-    function getHolidayForDate(date) {
-        const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,'0'), d = String(date.getDate()).padStart(2,'0');
-        const full = `${y}-${m}-${d}`;
-        if (dynamicHolidays[full]) return dynamicHolidays[full] === 'ยกเลิก' ? null : dynamicHolidays[full];
-        if (fixedHolidays[`${m}-${d}`]) return fixedHolidays[`${m}-${d}`];
-        if (buddhistHolidayOffsets[y]) {
-            const b = buddhistHolidayOffsets[y], dStr = date.toDateString();
-            if (b.m.toDateString() === dStr) return 'มาฆบูชา'; if (b.v.toDateString() === dStr) return 'วิสาขบูชา';
-            if (b.a.toDateString() === dStr) return 'อาสาฬหบูชา'; if (b.k.toDateString() === dStr) return 'เข้าพรรษา';
         }
-        return null;
-    }
 
-    // =========================================================
-    // 🌟🌟 ENGINE 3: UI & SMART DATE PARSER 🌟🌟
-    // =========================================================
-    document.getElementById('visitDate').valueAsDate = new Date();
-    
-    setInterval(() => {
-        document.getElementById('currentDateTime').textContent = new Date().toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-    }, 1000);
-
-    // --- ฟังก์ชันอัจฉริยะสำหรับแปลงวันเกิด (HosXP & General Formats) ---
-    function parseSmartDate(inputStr) {
-        if (!inputStr || !inputStr.trim()) return null;
-        let str = inputStr.trim().replace(/\s+/g, '');
-        let y, m, d;
-
-        // Pattern 1: DD/MM/YYYY หรือ DD-MM-YYYY หรือ YYYY-MM-DD
-        if (str.includes('/') || str.includes('-') || str.includes('.')) {
-            let parts = str.split(/[\/\-\.]/);
-            if (parts.length === 3) {
-                let p1 = parseInt(parts[0], 10);
-                let p2 = parseInt(parts[1], 10);
-                let p3 = parseInt(parts[2], 10);
-
-                if (isNaN(p1) || isNaN(p2) || isNaN(p3)) return null;
-
-                // ถ้าส่วนสุดท้ายเป็นปี 4 หลัก (เช่น 23/07/2567 หรือ 23/07/2024)
-                if (p3 > 1000) {
-                    d = p1; m = p2; y = p3;
-                } 
-                // ถ้าส่วนแรกเป็นปี 4 หลัก (เช่น 2024-07-23 หรือ 2567-07-23)
-                else if (p1 > 1000) {
-                    y = p1; m = p2; d = p3;
-                } 
-                // กรณีพิมพ์ย่อสองหลัก
-                else {
-                    d = p1; m = p2; y = p3;
+        async function fetchSpecialHolidays() {
+            const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTeNaf6KixwzfXU2ZMvwhe1fPvWbfTkmzZGwQnuMKKNdMZzmsWYrsdYQqL1MxYhXPiuZeDlhQ12Bp2j/pub?gid=0&single=true&output=csv'; 
+            const response = await fetch(csvUrl + '&t=' + new Date().getTime());
+            const data = await response.text();
+            
+            const rows = data.split(/\r?\n/).slice(1); 
+            rows.forEach(row => {
+                if (!row.trim()) return;
+                const columns = row.split(',');
+                if (columns.length >= 2) {
+                    let dateStr = columns[0].replace(/['"]/g, '').trim();
+                    let holidayName = columns.slice(1).join(',').replace(/['"]/g, '').trim(); 
+                    if (dateStr.includes('/')) {
+                        const p = dateStr.split('/');
+                        if (p.length === 3) {
+                            let p1 = parseInt(p[0]), p2 = parseInt(p[1]), y = parseInt(p[2]);
+                            if (y > 2500) y -= 543; 
+                            let m = p2, d = p1; 
+                            if (p1 > 12) { d = p1; m = p2; } else if (p2 > 12) { d = p2; m = p1; }
+                            dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                        }
+                    }
+                    if (dateStr) dynamicHolidays[dateStr] = holidayName;
                 }
-            }
-        } 
-        // Pattern 2: ตัวเลขติดกัน 8 หลัก (เช่น 23072567)
-        else if (/^\d{8}$/.test(str)) {
-            d = parseInt(str.substring(0, 2), 10);
-            m = parseInt(str.substring(2, 4), 10);
-            y = parseInt(str.substring(4, 8), 10);
+            });
         }
 
-        if (!y || !m || !d) {
-            let dateAttempt = new Date(inputStr);
-            if (!isNaN(dateAttempt.getTime())) return dateAttempt;
+        async function fetchVaccineSchedules() {
+            const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTeNaf6KixwzfXU2ZMvwhe1fPvWbfTkmzZGwQnuMKKNdMZzmsWYrsdYQqL1MxYhXPiuZeDlhQ12Bp2j/pub?gid=2105451323&single=true&output=csv';
+            const response = await fetch(csvUrl + '&t=' + new Date().getTime());
+            const data = await response.text();
+            
+            const rows = data.split(/\r?\n/).slice(1);
+            rows.forEach(row => {
+                if (!row.trim()) return;
+                const cols = []; let inQ = false, cur = "";
+                for (let i = 0; i < row.length; i++) {
+                    if (row[i] === '"') inQ = !inQ; 
+                    else if (row[i] === ',' && !inQ) { cols.push(cur.trim()); cur = ""; } 
+                    else cur += row[i];
+                }
+                cols.push(cur.trim());
+                
+                if (cols.length >= 6) {
+                    const code = cols[0].replace(/['"]/g, ''); if (!code) return;
+                    const vacs = cols[2].replace(/['"]/g, '').split('|').map(v => {
+                        const p = v.split('/'); return { name: p[0]?p[0].trim():'', thai: p[1]?p[1].trim():'', type: p[2]?p[2].trim():'injection' };
+                    }).filter(v => v.name !== '');
+                    const weeks = cols[4].replace(/['"]/g, '').split(',').map(w => parseInt(w.trim())).filter(w => !isNaN(w));
+                    
+                    vaccineSchedules[code] = {
+                        name: cols[1].replace(/['"]/g, ''), vaccines: vacs,
+                        schedule: cols[3].replace(/['"]/g, ''), weeks: weeks,
+                        time: cols[5].replace(/['"]/g, ''),
+                        nextAge: cols[6]?cols[6].replace(/['"]/g, ''):null,
+                        special: cols[7]?cols[7].replace(/['"]/g, ''):''
+                    };
+                }
+            });
+        }
+
+        function populateDelayedDropdown() {
+            const select = document.getElementById('delayedAge');
+            select.innerHTML = '<option value="">-- เลือกอายุที่ต้องการนัด --</option>';
+            Object.keys(vaccineSchedules).forEach(code => select.innerHTML += `<option value="${code}">${vaccineSchedules[code].name}</option>`);
+        }
+
+        function renderVaccineScheduleTab() {
+            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">';
+            Object.keys(vaccineSchedules).forEach(code => {
+                const vac = vaccineSchedules[code];
+                let vacListHtml = vac.vaccines.map(v => `<div style="background: #f8fafc; padding: 0.625rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 0.75rem;"><span style="font-size: 1.25rem;">${v.type === 'injection' ? '💉' : '💊'}</span><div><div style="font-weight: 700; color: #1e293b; font-size: 0.875rem;">${v.name}</div><div style="font-size: 0.75rem; color: #64748b;">${v.thai}</div></div></div>`).join('');
+                html += `
+                    <div style="background: white; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem;"><h3 style="font-size: 1.125rem; font-weight: 900; color: #15803d; margin: 0;">📌 อายุ ${vac.name}</h3></div>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">${vacListHtml}</div>
+                        <div style="background: #eff6ff; color: #1e40af; font-size: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-weight: 700; display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.5rem;">
+                            <div>📅 รอบ: ${vac.schedule}</div>
+                            ${vac.time ? `<div>⏰ เวลา: ${vac.time}</div>` : ''}
+                        </div>
+                        ${vac.special ? `<div style="background: #fef2f2; color: #b91c1c; padding: 0.625rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700; display: flex; gap: 0.5rem;"><span>⚠️</span><span>${vac.special}</span></div>` : ''}
+                    </div>`;
+            });
+            html += '</div>';
+            const container = document.getElementById('fullScheduleContainer');
+            container.innerHTML = html;
+            container.className = '';
+        }
+
+        initSystem();
+
+        const fixedHolidays = { '01-01': 'ปีใหม่', '04-06': 'จักรี', '04-13': 'สงกรานต์', '04-14': 'สงกรานต์', '04-15': 'สงกรานต์', '05-04': 'ฉัตรมงคล', '06-03': 'เฉลิมฯ ราชินี', '07-28': 'เฉลิมฯ ร.10', '08-12': 'แม่', '10-13': 'สวรรคต ร.9', '10-23': 'ปิยมหาราช', '12-05': 'พ่อ', '12-10': 'รัฐธรรมนูญ', '12-31': 'สิ้นปี' };
+        const buddhistHolidayOffsets = {
+            2024: { 'm': new Date(2024,1,24), 'v': new Date(2024,4,22), 'a': new Date(2024,6,20), 'k': new Date(2024,6,21) },
+            2025: { 'm': new Date(2025,1,12), 'v': new Date(2025,4,11), 'a': new Date(2025,6,10), 'k': new Date(2025,6,11) },
+            2026: { 'm': new Date(2026,2,3), 'v': new Date(2026,4,31), 'a': new Date(2026,6,29), 'k': new Date(2026,6,30) },
+            2027: { 'm': new Date(2027,1,21), 'v': new Date(2027,4,20), 'a': new Date(2027,6,18), 'k': new Date(2027,6,19) }
+        };
+        function getHolidayForDate(date) {
+            const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,'0'), d = String(date.getDate()).padStart(2,'0');
+            const full = `${y}-${m}-${d}`;
+            if (dynamicHolidays[full]) return dynamicHolidays[full] === 'ยกเลิก' ? null : dynamicHolidays[full];
+            if (fixedHolidays[`${m}-${d}`]) return fixedHolidays[`${m}-${d}`];
+            if (buddhistHolidayOffsets[y]) {
+                const b = buddhistHolidayOffsets[y], dStr = date.toDateString();
+                if (b.m.toDateString() === dStr) return 'มาฆบูชา'; if (b.v.toDateString() === dStr) return 'วิสาขบูชา';
+                if (b.a.toDateString() === dStr) return 'อาสาฬหบูชา'; if (b.k.toDateString() === dStr) return 'เข้าพรรษา';
+            }
             return null;
         }
 
-        // แปลง พ.ศ. เป็น ค.ศ.
-        if (y > 2400) y -= 543;
-        let parsedDate = new Date(y, m - 1, d);
-        if (isNaN(parsedDate.getTime())) return null;
-        return parsedDate;
-    }
-
-    function resetAll() {
-        document.getElementById('birthDate').value = '';
         document.getElementById('visitDate').valueAsDate = new Date();
-        document.getElementById('delayedAge').value = '';
-        closeResultModal();
-        showTab('normal');
-    }
+        
+        setInterval(() => {
+            document.getElementById('currentDateTime').textContent = new Date().toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        }, 1000);
 
-    function showTab(tab) {
-        ['normal', 'delayed', 'schedule', 'holiday'].forEach(t => {
-            const btn = document.getElementById(t + 'Tab'), content = document.getElementById(t + 'Content');
-            if (t === tab) {
-                btn.classList.add('border-blue-600', 'bg-blue-50/50', 'text-blue-600', 'font-black');
-                btn.classList.remove('border-transparent', 'text-gray-500', 'font-bold', 'hover:bg-gray-50');
-                if(t==='delayed') btn.classList.replace('border-blue-600','border-orange-500'), btn.classList.replace('text-blue-600','text-orange-600'), btn.classList.replace('bg-blue-50/50','bg-orange-50/50');
-                if(t==='schedule') btn.classList.replace('border-blue-600','border-green-500'), btn.classList.replace('text-blue-600','text-green-600'), btn.classList.replace('bg-blue-50/50','bg-green-50/50');
-                if(t==='holiday') btn.classList.replace('border-blue-600','border-red-500'), btn.classList.replace('text-blue-600','text-red-600'), btn.classList.replace('bg-blue-50/50','bg-red-50/50');
-                content.classList.remove('hidden');
+        function parseSmartDate(inputStr) {
+            if (!inputStr || !inputStr.trim()) return null;
+            let str = inputStr.trim().replace(/\s+/g, '');
+            let y, m, d;
+
+            if (str.includes('/') || str.includes('-') || str.includes('.')) {
+                let parts = str.split(/[\/\-\.]/);
+                if (parts.length === 3) {
+                    let p1 = parseInt(parts[0], 10);
+                    let p2 = parseInt(parts[1], 10);
+                    let p3 = parseInt(parts[2], 10);
+
+                    if (isNaN(p1) || isNaN(p2) || isNaN(p3)) return null;
+
+                    if (p3 > 1000) { d = p1; m = p2; y = p3; } 
+                    else if (p1 > 1000) { y = p1; m = p2; d = p3; } 
+                    else { d = p1; m = p2; y = p3; }
+                }
+            } else if (/^\d{8}$/.test(str)) {
+                d = parseInt(str.substring(0, 2), 10);
+                m = parseInt(str.substring(2, 4), 10);
+                y = parseInt(str.substring(4, 8), 10);
+            }
+
+            if (!y || !m || !d) {
+                let dateAttempt = new Date(inputStr);
+                if (!isNaN(dateAttempt.getTime())) return dateAttempt;
+                return null;
+            }
+
+            if (y > 2400) y -= 543;
+            let parsedDate = new Date(y, m - 1, d);
+            if (isNaN(parsedDate.getTime())) return null;
+            return parsedDate;
+        }
+
+        function resetAll() {
+            document.getElementById('birthDate').value = '';
+            document.getElementById('visitDate').valueAsDate = new Date();
+            document.getElementById('delayedAge').value = '';
+            closeResultModal();
+            showTab('normal');
+        }
+
+        function showTab(tab) {
+            ['normal', 'delayed', 'schedule', 'holiday'].forEach(t => {
+                const btn = document.getElementById(t + 'Tab'), content = document.getElementById(t + 'Content');
+                if (t === tab) {
+                    btn.style.borderBottomColor = '#2563eb';
+                    btn.style.color = '#2563eb';
+                    btn.style.fontWeight = '900';
+                    btn.style.background = '#eff6ff';
+                    content.style.display = 'block';
+                } else {
+                    btn.style.borderBottomColor = 'transparent';
+                    btn.style.color = '#64748b';
+                    btn.style.fontWeight = '700';
+                    btn.style.background = 'transparent';
+                    content.style.display = 'none';
+                }
+            });
+        }
+
+        function calculateAge() {
+            if (!isDataLoaded) return alert('⏳ กำลังโหลดฐานข้อมูล กรุณารอสักครู่');
+            
+            const bDate = parseSmartDate(document.getElementById('birthDate').value);
+            const vDate = new Date(document.getElementById('visitDate').value);
+            
+            if (!bDate) return alert('⚠️ กรุณากรอกวันเกิดเด็กให้ถูกต้อง (รองรับทั้ง พ.ศ. และ ค.ศ. เช่น 23/07/2567)');
+            if (bDate > vDate) return alert('⚠️ วันเกิดห้ามมากกว่าวันที่มารับบริการ');
+
+            const age = calculateDetailedAge(bDate, vDate);
+            
+            document.getElementById('modalAgeYMD').textContent = `${age.years} ปี ${age.months} เดือน ${age.days} วัน`;
+            document.getElementById('modalAgeWeeks').textContent = `${age.weeks} สัปดาห์`;
+            document.getElementById('modalAgeSection').style.display = 'block';
+
+            const code = determineVaccineAge(age);
+            
+            const cvc = document.getElementById('modalCurrentVaccineContent');
+            const nnc = document.getElementById('modalNextApptContent');
+            cvc.innerHTML = ''; nnc.innerHTML = ''; cvc.style.display = 'none'; nnc.style.display = 'none';
+            document.getElementById('modalCalendarArea').style.display = 'none';
+
+            if (code && vaccineSchedules[code]) {
+                buildCurrentVaccineModalCard(code, "✅ ต้องฉีด \"วันนี้\"");
+                buildNextAppointmentModalCard(code, vDate, bDate, 'normal');
             } else {
-                btn.className = "flex-1 py-4 px-6 text-center font-bold text-gray-500 hover:text-gray-800 border-b-4 border-transparent hover:bg-gray-50 whitespace-nowrap transition-colors";
-                content.classList.add('hidden');
+                cvc.innerHTML = `<div style="background: #fef2f2; border: 2px solid #fca5a5; border-radius: 1rem; padding: 1.5rem; text-align: center;"><span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem;">🤷‍♂️</span><span style="color: #991b1b; font-weight: 700;">ไม่พบกำหนดการฉีดวัคซีนสำหรับอายุนี้</span></div>`;
+                cvc.style.display = 'block';
             }
-        });
-    }
-
-    // --- คำนวณปกติ -> เด้งเข้า Modal ---
-    function calculateAge() {
-        if (!isDataLoaded) return alert('⏳ กำลังโหลดฐานข้อมูล กรุณารอสักครู่');
-        
-        const bDate = parseSmartDate(document.getElementById('birthDate').value);
-        const vDate = new Date(document.getElementById('visitDate').value);
-        
-        if (!bDate) return alert('⚠️ กรุณากรอกวันเกิดเด็กให้ถูกต้อง (รองรับทั้ง พ.ศ. และ ค.ศ. เช่น 23/07/2567)');
-        if (bDate > vDate) return alert('⚠️ วันเกิดห้ามมากกว่าวันที่มารับบริการ');
-
-        const age = calculateDetailedAge(bDate, vDate);
-        
-        // 1. ใส่ข้อมูลในแถบด้านบน
-        document.getElementById('modalAgeYMD').textContent = `${age.years} ปี ${age.months} เดือน ${age.days} วัน`;
-        document.getElementById('modalAgeWeeks').textContent = `${age.weeks} สัปดาห์`;
-        document.getElementById('modalAgeSection').classList.remove('hidden');
-
-        const code = determineVaccineAge(age);
-        
-        // 2. ล้างข้อมูลเก่า
-        const cvc = document.getElementById('modalCurrentVaccineContent');
-        const nnc = document.getElementById('modalNextApptContent');
-        cvc.innerHTML = ''; nnc.innerHTML = ''; cvc.classList.add('hidden'); nnc.classList.add('hidden');
-        document.getElementById('modalCalendarArea').classList.add('hidden');
-
-        if (code && vaccineSchedules[code]) {
-            buildCurrentVaccineModalCard(code, "✅ ต้องฉีด \"วันนี้\"");
-            buildNextAppointmentModalCard(code, vDate, bDate, 'normal');
-        } else {
-            cvc.innerHTML = `<div class="bg-red-50 border-2 border-red-300 rounded-2xl p-6 text-center shadow-sm h-full flex flex-col justify-center"><span class="text-4xl block mb-2">🤷‍♂️</span><span class="text-red-800 font-bold">ไม่พบกำหนดการฉีดวัคซีนสำหรับอายุนี้</span></div>`;
-            cvc.classList.remove('hidden');
-        }
-        showResultModal("ผลประมวลผล (ตามเกณฑ์ปกติ)");
-    }
-
-    // --- ค้นหาตรงๆ -> เด้งเข้า Modal ---
-    function calculateDelayedVaccine() {
-        if (!isDataLoaded) return alert('⏳ กำลังโหลดฐานข้อมูล กรุณารอสักครู่');
-        const code = document.getElementById('delayedAge').value;
-        if (!code) return alert('⚠️ กรุณาเลือกอายุที่ต้องการนัด');
-
-        const bDateStr = document.getElementById('birthDate').value;
-        const bDate = parseSmartDate(bDateStr);
-        
-        // ซ่อนแถบอายุ เพราะเราค้นหาตรงๆ
-        document.getElementById('modalAgeSection').classList.add('hidden');
-
-        // การ์ดขวา: แสดงข้อมูลวัคซีนของอายุที่เลือก
-        buildCurrentVaccineModalCard(code, `💉 วัคซีนสำหรับ ${vaccineSchedules[code].name}`);
-        
-        // การ์ดซ้าย: แสดงวันที่เปิดให้บริการของ "อายุที่เลือก"
-        buildSpecificAppointmentModalCard(code, new Date(), bDate);
-        
-        showResultModal("ผลการค้นหาวันที่เปิดให้บริการ");
-    }
-
-    // --- ตัวช่วยคำนวณต่างๆ ---
-    function calculateDetailedAge(b, c) {
-        let y = c.getFullYear() - b.getFullYear(), m = c.getMonth() - b.getMonth(), d = c.getDate() - b.getDate();
-        if (d < 0) { m--; d += new Date(b.getFullYear(), b.getMonth() + 1, 0).getDate(); }
-        if (m < 0) { y--; m += 12; }
-        return { years: y, months: m, days: d, weeks: Math.floor((c - b) / (1000 * 60 * 60 * 24 * 7)) };
-    }
-    
-    function determineVaccineAge(a) {
-        const t = a.years * 12 + a.months;
-        // ดักเด็กแรกเกิด (ต่ำกว่า 1 เดือน)
-        if (t === 0) return vaccineSchedules['b'] ? 'b' : '1m'; 
-        if (t>=1 && t<2) return '1m'; 
-        if (t>=2 && t<4) return '2m'; 
-        if (t>=4 && t<6) return '4m';
-        if (t>=6 && t<9) return '6m'; 
-        if (t>=9 && t<12) return '9m'; 
-        if (t>=12 && t<18) return '1y';
-        if (t>=18 && t<30) return '18m'; 
-        if (t>=30 && t<48) return '30m'; 
-        if (t>=48) return '4y'; 
-        return null;
-    }
-    
-    function formatHosxpDate(date) { return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear() + 543}`; }
-    function copyDateText(e, text) {
-        if(e) e.stopPropagation();
-        navigator.clipboard.writeText(text).then(()=>alert(`📋 ก๊อปปี้ "${text}" แล้ว! วางลง HosXP ได้เลย`));
-    }
-    function copyStaffText() {
-        const txt = document.getElementById('staffText').innerText;
-        navigator.clipboard.writeText(txt).then(()=>alert('📋 ก๊อปปี้ข้อความพยาบาลเรียบร้อย ครบถ้วนพร้อมวางใน HosXP!'));
-    }
-    function calculateDaysUntilAppointment(d) { 
-        const diff = Math.ceil((d.getTime() - new Date().getTime()) / (1000 * 3600 * 24)); 
-        return diff < 0 ? `ผ่านมาแล้ว ${Math.abs(diff)}` : diff === 0 ? 'วันนี้' : diff; 
-    }
-
-    // --- สร้างการ์ดสีเขียว (วัคซีนวันนี้ / วัคซีนที่ค้นหา) เอาไว้ฝั่งขวา ---
-    function buildCurrentVaccineModalCard(code, titleText) {
-        const vac = vaccineSchedules[code];
-        let list = vac.vaccines.map(v => `<div class="flex items-center bg-white rounded p-2 shadow-sm border border-green-100"><span class="text-xl mr-3">${v.type==='injection'?'💉':'💊'}</span><div class="leading-tight"><div class="font-black text-green-900">${v.name}</div><div class="text-[11px] text-green-700 font-bold">${v.thai}</div></div></div>`).join('');
-        let html = `
-            <div class="bg-green-50 border-2 border-green-500 rounded-2xl overflow-hidden shadow-lg transform transition h-full flex flex-col">
-                <div class="bg-gradient-to-r from-green-600 to-emerald-500 text-white px-4 py-3 font-black text-lg flex justify-between items-center shadow-sm">
-                    <span>${titleText}</span><span class="bg-white/20 px-2 py-0.5 rounded text-sm text-green-50 border border-green-300/50">อายุ ${vac.name}</span>
-                </div>
-                <div class="p-4 flex-1 flex flex-col justify-center space-y-2 relative">
-                    ${list}
-                    ${vac.special ? `<div class="mt-3 bg-red-100 border border-red-300 text-red-800 text-xs font-bold p-2 rounded flex items-start"><span class="mr-1">⚠️</span>${vac.special}</div>` : ''}
-                </div>
-            </div>`;
-        const container = document.getElementById('modalCurrentVaccineContent');
-        container.innerHTML = html; container.classList.remove('hidden');
-    }
-
-    // --- สร้างการ์ดสีม่วง (วันนัดถัดไป สำหรับโหมดปกติ) เอาไว้ฝั่งซ้าย ---
-    function buildNextAppointmentModalCard(code, startCalcDate, bDate, mode) {
-        const currVac = vaccineSchedules[code];
-        const container = document.getElementById('modalNextApptContent');
-        
-        if (!currVac.nextAge || !vaccineSchedules[currVac.nextAge]) {
-            container.innerHTML = `<div class="bg-blue-50 border-2 border-blue-400 rounded-2xl p-6 text-center shadow-sm h-full flex flex-col justify-center"><span class="text-3xl block mb-2">🎉</span><span class="text-blue-900 font-black">นี่เป็นวัคซีนเข็มสุดท้ายตามกำหนดแล้วครับ!</span></div>`;
-            container.classList.remove('hidden'); document.getElementById('modalCalendarArea').classList.add('hidden'); return;
+            showResultModal("ผลประมวลผล (ตามเกณฑ์ปกติ)");
         }
 
-        const nextAgeCode = currVac.nextAge; const nextVac = vaccineSchedules[nextAgeCode];
-        let targetDate = new Date(startCalcDate);
-        
-        if (bDate && mode === 'normal') {
-            targetDate = new Date(bDate);
-            const numPart = parseInt(nextAgeCode.replace(/[^0-9]/g, ''));
-            if (nextAgeCode.includes('m')) targetDate.setMonth(targetDate.getMonth() + numPart);
-            else targetDate.setFullYear(targetDate.getFullYear() + numPart);
-        }
+        function calculateDelayedVaccine() {
+            if (!isDataLoaded) return alert('⏳ กำลังโหลดฐานข้อมูล กรุณารอสักครู่');
+            const code = document.getElementById('delayedAge').value;
+            if (!code) return alert('⚠️ กรุณาเลือกอายุที่ต้องการนัด');
 
-        let apptDate = findNextApptDate(targetDate, nextVac.weeks);
-        let altDates = findAltDates(apptDate, nextVac.weeks, 12);
-        let hDate = formatHosxpDate(apptDate);
-        
-        const cColor = 'purple';
-        const bgHeader = 'from-purple-600 to-indigo-500';
-
-        let html = `
-            <div class="bg-${cColor}-50 border-2 border-${cColor}-500 rounded-2xl overflow-hidden shadow-lg h-full flex flex-col">
-                <div class="bg-gradient-to-r ${bgHeader} text-white px-4 py-3 font-black text-lg flex justify-between items-center shadow-sm">
-                    <span>📅 วันนัดครั้งถัดไป</span><span class="bg-white/20 px-2 py-0.5 rounded text-sm border border-white/30">อายุ ${nextVac.name}</span>
-                </div>
-                <div class="p-4 flex-1 flex flex-col">
-                    <div class="bg-white rounded-xl border border-${cColor}-200 p-4 shadow-sm text-center relative mb-3 flex-1 flex flex-col justify-center">
-                        <div class="text-xs text-${cColor}-600 font-bold mb-1 uppercase tracking-wider">วันที่ระบบแนะนำ</div>
-                        <div class="text-xl md:text-2xl font-black text-${cColor}-900">${apptDate.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'short',year:'numeric'})}</div>
-                        
-                        <div class="mt-2 text-sm font-black text-${cColor}-700 bg-${cColor}-100 py-1.5 px-4 rounded-full inline-block mx-auto shadow-sm border border-${cColor}-200 flex items-center justify-center gap-1">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/></svg>
-                            ระยะห่างจากวันนี้: ${calculateDaysUntilAppointment(apptDate)} วัน
-                        </div>
-                        
-                        <div class="mt-4 flex items-center justify-between bg-${cColor}-50/50 p-1.5 rounded-lg border border-${cColor}-100">
-                            <span class="font-mono font-bold text-${cColor}-800 tracking-widest pl-2">${hDate}</span>
-                            <button onclick="copyDateText(event, '${hDate}')" class="bg-${cColor}-500 hover:bg-${cColor}-600 text-white px-3 py-1.5 rounded text-xs font-bold transition shadow">📋 Copy (HosXP)</button>
-                        </div>
-                    </div>`;
-
-        if (bDate) {
-            const fAge = calculateDetailedAge(bDate, apptDate);
-            html += `<div class="bg-blue-100 text-blue-900 text-[11px] font-bold px-3 py-2 rounded-lg mb-3 flex justify-between items-center border border-blue-200">
-                        <span>👶 อายุในวันนัด:</span> <span>${fAge.years} ปี ${fAge.months} เดือน ${fAge.days} วัน <span class="bg-blue-200 px-1.5 rounded ml-1">${fAge.weeks} wk</span></span>
-                     </div>`;
-        }
-
-        html += `
-                    <div class="border-t border-${cColor}-200 pt-3">
-                        <button onclick="document.getElementById('altList').classList.toggle('hidden')" class="w-full text-left text-[11px] font-bold text-${cColor}-700 flex justify-between items-center hover:bg-${cColor}-100 p-2 rounded transition">
-                            <span>ตัวเลือกวันนัดเผื่อ (คลิกเพื่อดู)</span> <span>▼</span>
-                        </button>
-                        <div id="altList" class="hidden mt-2 grid grid-cols-2 gap-2 max-h-32 overflow-y-auto no-scrollbar pb-1">`;
-        
-        altDates.forEach((d) => {
-            const hd = formatHosxpDate(d);
-            html += `<div class="bg-white border border-gray-200 rounded p-2 text-center cursor-pointer hover:border-blue-400 transition" onclick="selectCalendarDate('${d.toISOString()}')">
-                        <div class="text-xs font-black text-gray-800">${d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</div>
-                        <div class="flex justify-between items-center mt-1 border-t pt-1">
-                            <span class="text-[9px] font-mono text-gray-500">${hd}</span>
-                            <button onclick="copyDateText(event,'${hd}')" class="text-blue-600 hover:bg-blue-50 rounded px-1 text-[10px] font-bold">Copy</button>
-                        </div>
-                     </div>`;
-        });
-        html += `</div></div></div></div>`;
-
-        container.innerHTML = html; container.classList.remove('hidden');
-        document.getElementById('modalCalendarArea').classList.remove('hidden');
-        displayCalendar(apptDate);
-    }
-
-    // --- สร้างการ์ดสีส้ม (หาวันฉีดแบบเจาะจง สำหรับโหมดค้นหา) เอาไว้ฝั่งซ้าย ---
-    function buildSpecificAppointmentModalCard(code, targetDate, bDate) {
-        const targetVac = vaccineSchedules[code]; 
-        const container = document.getElementById('modalNextApptContent');
-
-        let apptDate = findNextApptDate(targetDate, targetVac.weeks);
-        let altDates = findAltDates(apptDate, targetVac.weeks, 24);
-        let hDate = formatHosxpDate(apptDate);
-        
-        const cColor = 'orange';
-        const bgHeader = 'from-orange-600 to-red-500';
-
-        let html = `
-            <div class="bg-${cColor}-50 border-2 border-${cColor}-500 rounded-2xl overflow-hidden shadow-lg h-full flex flex-col">
-                <div class="bg-gradient-to-r ${bgHeader} text-white px-4 py-3 font-black text-lg flex justify-between items-center shadow-sm">
-                    <span>📅 วันที่เปิดให้บริการ</span><span class="bg-white/20 px-2 py-0.5 rounded text-sm border border-white/30">สำหรับ ${targetVac.name}</span>
-                </div>
-                <div class="p-4 flex-1 flex flex-col">
-                    <div class="bg-white rounded-xl border border-${cColor}-200 p-4 shadow-sm text-center relative mb-3 flex-1 flex flex-col justify-center">
-                        <div class="text-xs text-${cColor}-600 font-bold mb-1 uppercase tracking-wider">วันให้บริการรอบถัดไป</div>
-                        <div class="text-xl md:text-2xl font-black text-${cColor}-900">${apptDate.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'short',year:'numeric'})}</div>
-                        
-                        <div class="mt-2 text-sm font-black text-${cColor}-700 bg-${cColor}-100 py-1.5 px-4 rounded-full inline-block mx-auto shadow-sm border border-${cColor}-200 flex items-center justify-center gap-1">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/></svg>
-                            ระยะห่างจากวันนี้: ${calculateDaysUntilAppointment(apptDate)} วัน
-                        </div>
-                        
-                        <div class="mt-4 flex items-center justify-between bg-${cColor}-50/50 p-1.5 rounded-lg border border-${cColor}-100">
-                            <span class="font-mono font-bold text-${cColor}-800 tracking-widest pl-2">${hDate}</span>
-                            <button onclick="copyDateText(event, '${hDate}')" class="bg-${cColor}-500 hover:bg-${cColor}-600 text-white px-3 py-1.5 rounded text-xs font-bold transition shadow">📋 Copy (HosXP)</button>
-                        </div>
-                    </div>`;
-
-        if (bDate) {
-            const fAge = calculateDetailedAge(bDate, apptDate);
-            html += `<div class="bg-blue-100 text-blue-900 text-[11px] font-bold px-3 py-2 rounded-lg mb-3 flex justify-between items-center border border-blue-200">
-                        <span>👶 อายุเด็กในวันที่ฉีด:</span> <span>${fAge.years} ปี ${fAge.months} เดือน ${fAge.days} วัน</span>
-                     </div>`;
-        } else {
-            html += `<div class="text-center text-[10px] text-gray-400 mb-2">💡 ใส่วันเกิดในหน้าแรกเพื่อดูอายุล่วงหน้าในวันที่มารับบริการ</div>`;
-        }
-
-        html += `
-                    <div class="border-t border-${cColor}-200 pt-3">
-                        <button onclick="document.getElementById('altList').classList.toggle('hidden')" class="w-full text-left text-[11px] font-bold text-${cColor}-700 flex justify-between items-center hover:bg-${cColor}-100 p-2 rounded transition">
-                            <span>ตัวเลือกวันที่เปิดให้บริการรอบอื่นๆ (คลิกเพื่อดู)</span> <span>▼</span>
-                        </button>
-                        <div id="altList" class="hidden mt-2 grid grid-cols-2 gap-2 max-h-32 overflow-y-auto no-scrollbar pb-1">`;
-        
-        altDates.forEach((d) => {
-            const hd = formatHosxpDate(d);
-            html += `<div class="bg-white border border-gray-200 rounded p-2 text-center cursor-pointer hover:border-blue-400 transition" onclick="selectCalendarDate('${d.toISOString()}')">
-                        <div class="text-xs font-black text-gray-800">${d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</div>
-                        <div class="flex justify-between items-center mt-1 border-t pt-1">
-                            <span class="text-[9px] font-mono text-gray-500">${hd}</span>
-                            <button onclick="copyDateText(event,'${hd}')" class="text-blue-600 hover:bg-blue-50 rounded px-1 text-[10px] font-bold">Copy</button>
-                        </div>
-                     </div>`;
-        });
-        html += `</div></div></div></div>`;
-
-        container.innerHTML = html; container.classList.remove('hidden');
-        document.getElementById('modalCalendarArea').classList.remove('hidden');
-        displayCalendar(apptDate);
-    }
-
-    // ลอจิกหาวันนัดที่ตรงกับวันพุธ + สัปดาห์ที่ให้บริการ + ไม่ตรงวันหยุด
-    function findNextApptDate(start, weeks) {
-        let d = new Date(start); while (d.getDay() !== 3) d.setDate(d.getDate() + 1);
-        for(let i=0; i<100; i++) {
-            if (weeks.includes(Math.ceil(d.getDate()/7)) && !getHolidayForDate(d)) return d;
-            d.setDate(d.getDate() + 7);
-        }
-        return d;
-    }
-    function findAltDates(start, weeks, limit) {
-        let alt = [], d = new Date(start); d.setDate(d.getDate()+7);
-        for(let i=0; i<limit*4 && alt.length<limit; i++) {
-            while(d.getDay() !== 3) d.setDate(d.getDate()+1);
-            if(weeks.includes(Math.ceil(d.getDate()/7)) && !getHolidayForDate(d)) alt.push(new Date(d));
-            d.setDate(d.getDate()+7);
-        }
-        return alt;
-    }
-
-    // --- ปฏิทินใน Modal ---
-    let calBaseDate = new Date(); let calSelDate = new Date();
-    function selectCalendarDate(iso) { displayCalendar(new Date(iso)); }
-    function displayCalendar(date) { calSelDate = new Date(date); calBaseDate = new Date(date); renderCal(); }
-    function renderCal() {
-        const y = calBaseDate.getFullYear(), m = calBaseDate.getMonth(), today = new Date();
-        const firstDay = new Date(y, m, 1), start = new Date(firstDay); start.setDate(start.getDate() - firstDay.getDay());
-        
-        let html = `
-            <div class="flex items-center justify-between mb-2 bg-slate-100 p-1 rounded border border-gray-200">
-                <button onclick="calBaseDate.setMonth(calBaseDate.getMonth()-1); renderCal()" class="text-slate-600 font-bold px-2 hover:bg-white rounded">◀</button>
-                <span class="font-black text-slate-800 text-xs">${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m]} ${y+543}</span>
-                <button onclick="calBaseDate.setMonth(calBaseDate.getMonth()+1); renderCal()" class="text-slate-600 font-bold px-2 hover:bg-white rounded">▶</button>
-            </div>
-            <div class="grid grid-cols-7 gap-0.5 text-center text-[10px] font-bold bg-white mb-1"><div class="text-red-500">อา</div><div>จ</div><div>อ</div><div class="text-green-600">พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div>
-            <div class="grid grid-cols-7 gap-0.5">`;
-        
-        let dDate = new Date(start);
-        for (let i = 0; i < 42; i++) {
-            const isCur = dDate.getMonth() === m, isTd = dDate.toDateString() === today.toDateString(), isSel = dDate.toDateString() === calSelDate.toDateString(), isHol = getHolidayForDate(dDate);
+            const bDateStr = document.getElementById('birthDate').value;
+            const bDate = parseSmartDate(bDateStr);
             
-            let cls = 'p-1 text-center rounded text-xs font-bold transition h-6 flex items-center justify-center ';
-            if(!isCur) cls += 'text-gray-300 '; else if(isSel) cls += 'bg-green-500 text-white shadow transform scale-105 ';
-            else if(isHol) cls += 'bg-red-400 text-white '; else cls += 'text-gray-700 bg-gray-50 hover:bg-blue-100 ';
-            if(isTd && !isSel && !isHol) cls += 'ring-1 ring-blue-400 text-blue-700 ';
-            
-            html += `<div class="${cls}" title="${isHol||''}">${dDate.getDate()}</div>`; dDate.setDate(dDate.getDate()+1);
+            document.getElementById('modalAgeSection').style.display = 'none';
+            buildCurrentVaccineModalCard(code, `💉 วัคซีนสำหรับ ${vaccineSchedules[code].name}`);
+            buildSpecificAppointmentModalCard(code, new Date(), bDate);
+            showResultModal("ผลการค้นหาวันที่เปิดให้บริการ");
         }
-        document.getElementById('calendarContainer').innerHTML = html + '</div>';
-    }
 
-    // =========================================================
-    // 🌟🌟 5. หน้าต่างรายการวันหยุดแบบตารางกะทัดรัด 🌟🌟
-    // =========================================================
-    function generateHolidayList() {
-        const currentYear = new Date().getFullYear();
-        let html = `
-            <div class="mb-4 bg-white border border-gray-200 shadow-sm rounded-lg p-4 flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="text-sm text-gray-700 font-bold">
-                    ประเภท: <span class="bg-gray-100 px-2 py-1 rounded">🏛️ ปกติ</span> | <span class="bg-gray-100 px-2 py-1 rounded">🌙 ศาสนา</span> | <span class="bg-orange-100 text-orange-700 px-2 py-1 rounded">🌟 วันหยุดพิเศษจากส่วนกลาง</span>
+        function calculateDetailedAge(b, c) {
+            let y = c.getFullYear() - b.getFullYear(), m = c.getMonth() - b.getMonth(), d = c.getDate() - b.getDate();
+            if (d < 0) { m--; d += new Date(b.getFullYear(), b.getMonth() + 1, 0).getDate(); }
+            if (m < 0) { y--; m += 12; }
+            return { years: y, months: m, days: d, weeks: Math.floor((c - b) / (1000 * 60 * 60 * 24 * 7)) };
+        }
+        
+        function determineVaccineAge(a) {
+            const t = a.years * 12 + a.months;
+            if (t === 0) return vaccineSchedules['b'] ? 'b' : '1m'; 
+            if (t>=1 && t<2) return '1m'; 
+            if (t>=2 && t<4) return '2m'; 
+            if (t>=4 && t<6) return '4m';
+            if (t>=6 && t<9) return '6m'; 
+            if (t>=9 && t<12) return '9m'; 
+            if (t>=12 && t<18) return '1y';
+            if (t>=18 && t<30) return '18m'; 
+            if (t>=30 && t<48) return '30m'; 
+            if (t>=48) return '4y'; 
+            return null;
+        }
+        
+        function formatHosxpDate(date) { return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear() + 543}`; }
+        function copyDateText(e, text) {
+            if(e) e.stopPropagation();
+            navigator.clipboard.writeText(text).then(()=>alert(`📋 ก๊อปปี้ "${text}" แล้ว! วางลง HosXP ได้เลย`));
+        }
+        function copyStaffText() {
+            const txt = document.getElementById('staffText').innerText;
+            navigator.clipboard.writeText(txt).then(()=>alert('📋 ก๊อปปี้ข้อความพยาบาลเรียบร้อย ครบถ้วนพร้อมวางใน HosXP!'));
+        }
+        function calculateDaysUntilAppointment(d) { 
+            const diff = Math.ceil((d.getTime() - new Date().getTime()) / (1000 * 3600 * 24)); 
+            return diff < 0 ? `ผ่านมาแล้ว ${Math.abs(diff)}` : diff === 0 ? 'วันนี้' : diff; 
+        }
+
+        function buildCurrentVaccineModalCard(code, titleText) {
+            const vac = vaccineSchedules[code];
+            let list = vac.vaccines.map(v => `<div style="display: flex; align-items: center; background: white; border-radius: 0.5rem; padding: 0.5rem; border: 1px solid #dcfce7; margin-bottom: 0.5rem;"><span style="font-size: 1.25rem; margin-right: 0.75rem;">${v.type==='injection'?'💉':'💊'}</span><div><div style="font-weight: 900; color: #14532d;">${v.name}</div><div style="font-size: 11px; color: #15803d; font-weight: 700;">${v.thai}</div></div></div>`).join('');
+            let html = `
+                <div style="background: #f0fdf4; border: 2px solid #22c55e; border-radius: 1rem; overflow: hidden; height: 100%; display: flex; flex-direction: column;">
+                    <div style="background: linear-gradient(to right, #16a34a, #10b981); color: white; padding: 0.75rem 1rem; font-weight: 900; font-size: 1.125rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span>${titleText}</span><span style="background: rgba(255,255,255,0.2); padding: 0.1rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem;">อายุ ${vac.name}</span>
+                    </div>
+                    <div style="padding: 1rem; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                        ${list}
+                        ${vac.special ? `<div style="margin-top: 0.75rem; background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; font-size: 0.75rem; font-weight: 700; padding: 0.5rem; border-radius: 0.5rem; display: flex; gap: 0.25rem;"><span>⚠️</span><span>${vac.special}</span></div>` : ''}
+                    </div>
+                </div>`;
+            const container = document.getElementById('modalCurrentVaccineContent');
+            container.innerHTML = html; 
+            container.style.display = 'block';
+        }
+
+        function buildNextAppointmentModalCard(code, startCalcDate, bDate, mode) {
+            const currVac = vaccineSchedules[code];
+            const container = document.getElementById('modalNextApptContent');
+            
+            if (!currVac.nextAge || !vaccineSchedules[currVac.nextAge]) {
+                container.innerHTML = `<div style="background: #eff6ff; border: 2px solid #60a5fa; border-radius: 1rem; padding: 1.5rem; text-align: center;"><span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">🎉</span><span style="color: #1e3a8a; font-weight: 900;">นี่เป็นวัคซีนเข็มสุดท้ายตามกำหนดแล้วครับ!</span></div>`;
+                container.style.display = 'block'; 
+                document.getElementById('modalCalendarArea').style.display = 'none'; 
+                return;
+            }
+
+            const nextAgeCode = currVac.nextAge; 
+            const nextVac = vaccineSchedules[nextAgeCode];
+            let targetDate = new Date(startCalcDate);
+            
+            if (bDate && mode === 'normal') {
+                targetDate = new Date(bDate);
+                const numPart = parseInt(nextAgeCode.replace(/[^0-9]/g, ''));
+                if (nextAgeCode.includes('m')) targetDate.setMonth(targetDate.getMonth() + numPart);
+                else targetDate.setFullYear(targetDate.getFullYear() + numPart);
+            }
+
+            let apptDate = findNextApptDate(targetDate, nextVac.weeks);
+            let altDates = findAltDates(apptDate, nextVac.weeks, 12);
+            let hDate = formatHosxpDate(apptDate);
+
+            let html = `
+                <div style="background: #faf5ff; border: 2px solid #a855f7; border-radius: 1rem; overflow: hidden; height: 100%; display: flex; flex-direction: column;">
+                    <div style="background: linear-gradient(to right, #9333ea, #6366f1); color: white; padding: 0.75rem 1rem; font-weight: 900; font-size: 1.125rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span>📅 วันนัดครั้งถัดไป</span><span style="background: rgba(255,255,255,0.2); padding: 0.1rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem;">อายุ ${nextVac.name}</span>
+                    </div>
+                    <div style="padding: 1rem; flex: 1; display: flex; flex-direction: column;">
+                        <div style="background: white; border-radius: 0.75rem; border: 1px solid #e9d5ff; padding: 1rem; text-align: center; margin-bottom: 0.75rem;">
+                            <div style="font-size: 0.75rem; color: #7e22ce; font-weight: 700; margin-bottom: 0.25rem;">วันที่ระบบแนะนำ</div>
+                            <div style="font-size: 1.25rem; font-weight: 900; color: #581c87;">${apptDate.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'short',year:'numeric'})}</div>
+                            
+                            <div style="margin-top: 0.5rem; font-size: 0.875rem; font-weight: 900; color: #6b21a8; background: #f3e8ff; padding: 0.375rem 1rem; border-radius: 9999px; display: inline-block;">
+                                ระยะห่างจากวันนี้: ${calculateDaysUntilAppointment(apptDate)} วัน
+                            </div>
+                            
+                            <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center; background: #faf5ff; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #f3e8ff;">
+                                <span style="font-family: monospace; font-weight: 700; color: #6b21a8;">${hDate}</span>
+                                <button onclick="copyDateText(event, '${hDate}')" style="background: #a855f7; color: white; border: none; padding: 0.375rem 0.75rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 700; cursor: pointer;">📋 Copy (HosXP)</button>
+                            </div>
+                        </div>`;
+
+            if (bDate) {
+                const fAge = calculateDetailedAge(bDate, apptDate);
+                html += `<div style="background: #dbeafe; color: #1e3a8a; font-size: 11px; font-weight: 700; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; border: 1px solid #bfdbfe;">
+                            <span>👶 อายุในวันนัด:</span> <span>${fAge.years} ปี ${fAge.months} เดือน ${fAge.days} วัน (${fAge.weeks} wk)</span>
+                         </div>`;
+            }
+
+            html += `
+                        <div style="border-top: 1px solid #e9d5ff; padding-top: 0.75rem;">
+                            <button onclick="document.getElementById('altList').style.display = document.getElementById('altList').style.display === 'grid' ? 'none' : 'grid'" style="width: 100%; text-align: left; font-size: 11px; font-weight: 700; color: #7e22ce; display: flex; justify-content: space-between; background: transparent; border: none; cursor: pointer; padding: 0.25rem;">
+                                <span>ตัวเลือกวันนัดเผื่อ (คลิกเพื่อดู)</span> <span>▼</span>
+                            </button>
+                            <div id="altList" style="display: none; margin-top: 0.5rem; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; max-height: 8rem; overflow-y: auto;">`;
+            
+            altDates.forEach((d) => {
+                const hd = formatHosxpDate(d);
+                html += `<div style="background: white; border: 1px solid #e2e8f0; border-radius: 0.25rem; padding: 0.5rem; text-align: center; cursor: pointer;" onclick="selectCalendarDate('${d.toISOString()}')">
+                            <div style="font-size: 0.75rem; font-weight: 900; color: #1e293b;">${d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.25rem; border-top: 1px solid #f1f5f9; padding-top: 0.25rem;">
+                                <span style="font-size: 9px; font-family: monospace; color: #64748b;">${hd}</span>
+                                <button onclick="copyDateText(event,'${hd}')" style="color: #2563eb; background: transparent; border: none; font-size: 10px; font-weight: 700; cursor: pointer;">Copy</button>
+                            </div>
+                         </div>`;
+            });
+            html += `</div></div></div></div>`;
+
+            container.innerHTML = html; 
+            container.style.display = 'block';
+            document.getElementById('modalCalendarArea').style.display = 'block';
+            displayCalendar(apptDate);
+        }
+
+        function buildSpecificAppointmentModalCard(code, targetDate, bDate) {
+            const targetVac = vaccineSchedules[code]; 
+            const container = document.getElementById('modalNextApptContent');
+
+            let apptDate = findNextApptDate(targetDate, targetVac.weeks);
+            let altDates = findAltDates(apptDate, targetVac.weeks, 24);
+            let hDate = formatHosxpDate(apptDate);
+
+            let html = `
+                <div style="background: #fff7ed; border: 2px solid #f97316; border-radius: 1rem; overflow: hidden; height: 100%; display: flex; flex-direction: column;">
+                    <div style="background: linear-gradient(to right, #ea580c, #ef4444); color: white; padding: 0.75rem 1rem; font-weight: 900; font-size: 1.125rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span>📅 วันที่เปิดให้บริการ</span><span style="background: rgba(255,255,255,0.2); padding: 0.1rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem;">สำหรับ ${targetVac.name}</span>
+                    </div>
+                    <div style="padding: 1rem; flex: 1; display: flex; flex-direction: column;">
+                        <div style="background: white; border-radius: 0.75rem; border: 1px solid #ffedd5; padding: 1rem; text-align: center; margin-bottom: 0.75rem;">
+                            <div style="font-size: 0.75rem; color: #c2410c; font-weight: 700; margin-bottom: 0.25rem;">วันให้บริการรอบถัดไป</div>
+                            <div style="font-size: 1.25rem; font-weight: 900; color: #7c2d12;">${apptDate.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'short',year:'numeric'})}</div>
+                            
+                            <div style="margin-top: 0.5rem; font-size: 0.875rem; font-weight: 900; color: #9a3412; background: #ffedd5; padding: 0.375rem 1rem; border-radius: 9999px; display: inline-block;">
+                                ระยะห่างจากวันนี้: ${calculateDaysUntilAppointment(apptDate)} วัน
+                            </div>
+                            
+                            <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center; background: #fff7ed; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #ffedd5;">
+                                <span style="font-family: monospace; font-weight: 700; color: #9a3412;">${hDate}</span>
+                                <button onclick="copyDateText(event, '${hDate}')" style="background: #f97316; color: white; border: none; padding: 0.375rem 0.75rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 700; cursor: pointer;">📋 Copy (HosXP)</button>
+                            </div>
+                        </div>`;
+
+            if (bDate) {
+                const fAge = calculateDetailedAge(bDate, apptDate);
+                html += `<div style="background: #dbeafe; color: #1e3a8a; font-size: 11px; font-weight: 700; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; border: 1px solid #bfdbfe;">
+                            <span>👶 อายุเด็กในวันที่ฉีด:</span> <span>${fAge.years} ปี ${fAge.months} เดือน ${fAge.days} วัน</span>
+                         </div>`;
+            }
+
+            html += `
+                        <div style="border-top: 1px solid #ffedd5; padding-top: 0.75rem;">
+                            <button onclick="document.getElementById('altList').style.display = document.getElementById('altList').style.display === 'grid' ? 'none' : 'grid'" style="width: 100%; text-align: left; font-size: 11px; font-weight: 700; color: #c2410c; display: flex; justify-content: space-between; background: transparent; border: none; cursor: pointer; padding: 0.25rem;">
+                                <span>ตัวเลือกวันที่เปิดให้บริการรอบอื่นๆ (คลิกเพื่อดู)</span> <span>▼</span>
+                            </button>
+                            <div id="altList" style="display: none; margin-top: 0.5rem; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; max-height: 8rem; overflow-y: auto;">`;
+            
+            altDates.forEach((d) => {
+                const hd = formatHosxpDate(d);
+                html += `<div style="background: white; border: 1px solid #e2e8f0; border-radius: 0.25rem; padding: 0.5rem; text-align: center; cursor: pointer;" onclick="selectCalendarDate('${d.toISOString()}')">
+                            <div style="font-size: 0.75rem; font-weight: 900; color: #1e293b;">${d.toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.25rem; border-top: 1px solid #f1f5f9; padding-top: 0.25rem;">
+                                <span style="font-size: 9px; font-family: monospace; color: #64748b;">${hd}</span>
+                                <button onclick="copyDateText(event,'${hd}')" style="color: #2563eb; background: transparent; border: none; font-size: 10px; font-weight: 700; cursor: pointer;">Copy</button>
+                            </div>
+                         </div>`;
+            });
+            html += `</div></div></div></div>`;
+
+            container.innerHTML = html; 
+            container.style.display = 'block';
+            document.getElementById('modalCalendarArea').style.display = 'block';
+            displayCalendar(apptDate);
+        }
+
+        function findNextApptDate(start, weeks) {
+            let d = new Date(start); while (d.getDay() !== 3) d.setDate(d.getDate() + 1);
+            for(let i=0; i<100; i++) {
+                if (weeks.includes(Math.ceil(d.getDate()/7)) && !getHolidayForDate(d)) return d;
+                d.setDate(d.getDate() + 7);
+            }
+            return d;
+        }
+        function findAltDates(start, weeks, limit) {
+            let alt = [], d = new Date(start); d.setDate(d.getDate()+7);
+            for(let i=0; i<limit*4 && alt.length<limit; i++) {
+                while(d.getDay() !== 3) d.setDate(d.getDate()+1);
+                if(weeks.includes(Math.ceil(d.getDate()/7)) && !getHolidayForDate(d)) alt.push(new Date(d));
+                d.setDate(d.getDate()+7);
+            }
+            return alt;
+        }
+
+        let calBaseDate = new Date(); let calSelDate = new Date();
+        function selectCalendarDate(iso) { displayCalendar(new Date(iso)); }
+        function displayCalendar(date) { calSelDate = new Date(date); calBaseDate = new Date(date); renderCal(); }
+        function renderCal() {
+            const y = calBaseDate.getFullYear(), m = calBaseDate.getMonth(), today = new Date();
+            const firstDay = new Date(y, m, 1), start = new Date(firstDay); start.setDate(start.getDate() - firstDay.getDay());
+            
+            let html = `
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; background: #f1f5f9; padding: 0.25rem; border-radius: 0.25rem;">
+                    <button onclick="calBaseDate.setMonth(calBaseDate.getMonth()-1); renderCal()" style="border: none; background: transparent; cursor: pointer; font-weight: bold;">◀</button>
+                    <span style="font-weight: 900; font-size: 0.75rem; color: #1e293b;">${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][m]} ${y+543}</span>
+                    <button onclick="calBaseDate.setMonth(calBaseDate.getMonth()+1); renderCal()" style="border: none; background: transparent; cursor: pointer; font-weight: bold;">▶</button>
                 </div>
-                <div class="flex items-center space-x-2 bg-blue-50 p-2 rounded-lg border border-blue-200">
-                    <label class="font-bold text-blue-800 text-sm">📅 เลือกปีปฏิทิน:</label>
-                    <select id="holidayYearSelect" onchange="updateHolidayDisplay()" class="p-1 border-none bg-transparent focus:ring-0 text-blue-600 font-black cursor-pointer outline-none text-lg">
-                        ${[...Array(10)].map((_, i) => {
-                            const y = 2024 + i;
-                            return `<option value="${y}" ${y === currentYear ? 'selected' : ''}>พ.ศ. ${y + 543}</option>`;
-                        }).join('')}
-                    </select>
-                </div>
-            </div>
-            <div id="holidayTableContainer" class="overflow-x-auto pb-4"></div>
-        `;
-        document.getElementById('holidayListContent').innerHTML = html;
-        updateHolidayDisplay();
-    }
-
-    function updateHolidayDisplay() {
-        const selectedYear = parseInt(document.getElementById('holidayYearSelect').value);
-        const holidays = getAllHolidaysForYear(selectedYear);
-        const today = new Date(); today.setHours(0,0,0,0);
-
-        let tableHtml = `
-            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-lg">
-                <table class="min-w-full divide-y divide-gray-200 text-sm">
-                    <thead class="bg-gradient-to-r from-gray-100 to-gray-200">
-                        <tr>
-                            <th class="px-5 py-4 text-left font-black text-gray-700 w-1/3">วันที่</th>
-                            <th class="px-5 py-4 text-left font-black text-gray-700">ชื่อวันหยุด / เทศกาล</th>
-                            <th class="px-5 py-4 text-center font-black text-gray-700 w-1/4">ประเภท</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">`;
-
-        if (holidays.length === 0) {
-            tableHtml += `<tr><td colspan="3" class="px-4 py-8 text-center text-gray-500 font-bold">ไม่มีข้อมูลวันหยุดในปีนี้</td></tr>`;
-        } else {
-            holidays.forEach(h => {
-                const dateStr = h.date.toLocaleDateString('th-TH', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
-                const isPast = h.date < today;
-                const textStyle = isPast ? 'text-gray-400 line-through decoration-gray-300' : 'text-gray-900 font-bold';
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 10px; font-weight: bold; margin-bottom: 0.25rem;"><div style="color: #ef4444;">อา</div><div>จ</div><div>อ</div><div style="color: #16a34a;">พ</div><div>พฤ</div><div>ศ</div><div>ส</div></div>
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;">`;
+            
+            let dDate = new Date(start);
+            for (let i = 0; i < 42; i++) {
+                const isCur = dDate.getMonth() === m, isTd = dDate.toDateString() === today.toDateString(), isSel = dDate.toDateString() === calSelDate.toDateString(), isHol = getHolidayForDate(dDate);
                 
-                const typeBadge = h.type === 'dynamic' 
-                    ? `<span class="bg-gradient-to-r from-orange-400 to-red-400 text-white px-3 py-1 rounded-full text-xs font-black shadow-sm">🌟 พิเศษ</span>` 
-                    : `<span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-bold border border-gray-200">${h.type === 'fixed' ? '🏛️ ปกติ' : '🌙 ศาสนา'}</span>`;
-
-                tableHtml += `
-                    <tr class="hover:bg-blue-50 transition-colors ${isPast ? 'bg-gray-50' : ''}">
-                        <td class="px-5 py-4 whitespace-nowrap ${textStyle}">${dateStr}</td>
-                        <td class="px-5 py-4 ${textStyle}">${h.name}</td>
-                        <td class="px-5 py-4 text-center">${typeBadge}</td>
-                    </tr>`;
-            });
-        }
-        tableHtml += `</tbody></table></div>`;
-        document.getElementById('holidayTableContainer').innerHTML = tableHtml;
-    }
-
-    function getAllHolidaysForYear(year) {
-        const holidays = [];
-        Object.entries(fixedHolidays).forEach(([md, name]) => {
-            const [m, d] = md.split('-'); const fullDate = `${year}-${m}-${d}`;
-            if (dynamicHolidays[fullDate] === 'ยกเลิก') return;
-            holidays.push({ date: new Date(year, parseInt(m)-1, parseInt(d)), name: dynamicHolidays[fullDate] || name, type: 'fixed' });
-        });
-        if (buddhistHolidayOffsets[year]) {
-            const b = buddhistHolidayOffsets[year];
-            [{d:b.m,n:'มาฆบูชา'},{d:b.v,n:'วิสาขบูชา'},{d:b.a,n:'อาสาฬหบูชา'},{d:b.k,n:'เข้าพรรษา'}].forEach(h => {
-                const fullDate = `${year}-${String(h.d.getMonth()+1).padStart(2,'0')}-${String(h.d.getDate()).padStart(2,'0')}`;
-                if (dynamicHolidays[fullDate] === 'ยกเลิก') return;
-                holidays.push({ date: h.d, name: dynamicHolidays[fullDate] || h.n, type: 'buddhist' });
-            });
-        }
-        Object.entries(dynamicHolidays).forEach(([ds, name]) => {
-            if (name === 'ยกเลิก') return;
-            const [y, m, d] = ds.split('-');
-            if (parseInt(y) === year && !holidays.some(h => h.date.getFullYear()===year && String(h.date.getMonth()+1).padStart(2,'0')===m && String(h.date.getDate()).padStart(2,'0')===d)) {
-                holidays.push({ date: new Date(year, parseInt(m)-1, parseInt(d)), name: name, type: 'dynamic' });
+                let bg = isSel ? '#22c55e' : isHol ? '#f87171' : isCur ? '#f8fafc' : '#ffffff';
+                let color = isSel || isHol ? '#ffffff' : isCur ? '#1e293b' : '#cbd5e1';
+                
+                html += `<div style="background: ${bg}; color: ${color}; padding: 0.25rem; text-align: center; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 700; ${isTd?'border: 1px solid #3b82f6;':''}" title="${isHol||''}">${dDate.getDate()}</div>`; 
+                dDate.setDate(dDate.getDate()+1);
             }
-        });
-        return holidays.sort((a, b) => a.date - b.date);
-    }
-</script>
+            document.getElementById('calendarContainer').innerHTML = html + '</div>';
+        }
+
+        function generateHolidayList() {
+            const currentYear = new Date().getFullYear();
+            let html = `
+                <div style="margin-bottom: 1rem; background: white; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 0.875rem; font-weight: 700; color: #334155;">
+                        ประเภท: <span style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">🏛️ ปกติ</span> | <span style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">🌙 ศาสนา</span> | <span style="background: #ffedd5; color: #c2410c; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">🌟 วันหยุดพิเศษ</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; background: #eff6ff; padding: 0.5rem; border-radius: 0.5rem;">
+                        <label style="font-weight: 700; color: #1e40af; font-size: 0.875rem;">📅 เลือกปีปฏิทิน:</label>
+                        <select id="holidayYearSelect" onchange="updateHolidayDisplay()" style="border: none; background: transparent; color: #2563eb; font-weight: 900; font-size: 1rem; cursor: pointer;">
+                            ${[...Array(10)].map((_, i) => {
+                                const y = 2024 + i;
+                                return `<option value="${y}" ${y === currentYear ? 'selected' : ''}>พ.ศ. ${y + 543}</option>`;
+                            }).join('')}
+                        </select>
+                    </div>
+                </div>
+                <div id="holidayTableContainer" style="overflow-x: auto;"></div>
+            `;
+            document.getElementById('holidayListContent').innerHTML = html;
+            updateHolidayDisplay();
+        }
+
+        function updateHolidayDisplay() {
+            const selectedYear = parseInt(document.getElementById('holidayYearSelect').value);
+            const holidays = getAllHolidaysForYear(selectedYear);
+            const today = new Date(); today.setHours(0,0,0,0);
+
+            let tableHtml = `
+                <div style="background: white; border-radius: 0.5rem; border: 1px solid #e2e8f0; overflow: hidden;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+                        <thead>
+                            <tr style="background: #f1f5f9; border-bottom: 1px solid #e2e8f0;">
+                                <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 900; color: #334155;">วันที่</th>
+                                <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 900; color: #334155;">ชื่อวันหยุด / เทศกาล</th>
+                                <th style="padding: 0.75rem 1rem; text-align: center; font-weight: 900; color: #334155;">ประเภท</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+            if (holidays.length === 0) {
+                tableHtml += `<tr><td colspan="3" style="padding: 2rem; text-align: center; color: #64748b; font-weight: 700;">ไม่มีข้อมูลวันหยุดในปีนี้</td></tr>`;
+            } else {
+                holidays.forEach(h => {
+                    const dateStr = h.date.toLocaleDateString('th-TH', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+                    const isPast = h.date < today;
+                    const style = isPast ? 'color: #94a3b8; text-decoration: line-through;' : 'color: #0f172a; font-weight: 700;';
+                    
+                    const typeBadge = h.type === 'dynamic' 
+                        ? `<span style="background: linear-gradient(to right, #fb923c, #f87171); color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 900;">🌟 พิเศษ</span>` 
+                        : `<span style="background: #f1f5f9; color: #475569; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; border: 1px solid #e2e8f0;">${h.type === 'fixed' ? '🏛️ ปกติ' : '🌙 ศาสนา'}</span>`;
+
+                    tableHtml += `
+                        <tr style="border-bottom: 1px solid #f1f5f9; ${isPast ? 'background: #f8fafc;' : ''}">
+                            <td style="padding: 0.75rem 1rem; ${style}">${dateStr}</td>
+                            <td style="padding: 0.75rem 1rem; ${style}">${h.name}</td>
+                            <td style="padding: 0.75rem 1rem; text-align: center;">${typeBadge}</td>
+                        </tr>`;
+                });
+            }
+            tableHtml += `</tbody></table></div>`;
+            document.getElementById('holidayTableContainer').innerHTML = tableHtml;
+        }
+
+        function getAllHolidaysForYear(year) {
+            const holidays = [];
+            Object.entries(fixedHolidays).forEach(([md, name]) => {
+                const [m, d] = md.split('-'); const fullDate = `${year}-${m}-${d}`;
+                if (dynamicHolidays[fullDate] === 'ยกเลิก') return;
+                holidays.push({ date: new Date(year, parseInt(m)-1, parseInt(d)), name: dynamicHolidays[fullDate] || name, type: 'fixed' });
+            });
+            if (buddhistHolidayOffsets[year]) {
+                const b = buddhistHolidayOffsets[year];
+                [{d:b.m,n:'มาฆบูชา'},{d:b.v,n:'วิสาขบูชา'},{d:b.a,n:'อาสาฬหบูชา'},{d:b.k,n:'เข้าพรรษา'}].forEach(h => {
+                    const fullDate = `${year}-${String(h.d.getMonth()+1).padStart(2,'0')}-${String(h.d.getDate()).padStart(2,'0')}`;
+                    if (dynamicHolidays[fullDate] === 'ยกเลิก') return;
+                    holidays.push({ date: h.d, name: dynamicHolidays[fullDate] || h.n, type: 'buddhist' });
+                });
+            }
+            Object.entries(dynamicHolidays).forEach(([ds, name]) => {
+                if (name === 'ยกเลิก') return;
+                const [y, m, d] = ds.split('-');
+                if (parseInt(y) === year && !holidays.some(h => h.date.getFullYear()===year && String(h.date.getMonth()+1).padStart(2,'0')===m && String(h.date.getDate()).padStart(2,'0')===d)) {
+                    holidays.push({ date: new Date(year, parseInt(m)-1, parseInt(d)), name: name, type: 'dynamic' });
+                }
+            });
+            return holidays.sort((a, b) => a.date - b.date);
+        }
+    </script>
+</body>
+</html>
